@@ -1,0 +1,19 @@
+.navbar {
+  padding: 0 20px;
+
+  .nav-wrapper {
+    display: flex;
+
+    .navbar-left {
+      display: flex;
+
+      a {
+        margin-right: 15px;
+      }
+    }
+
+    .right {
+      margin: 0 0 0 auto;
+    }
+  }
+}

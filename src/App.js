@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.scss';
 
-import AppRoute from './layout/AppRoute'
-import EmptyLayout from './layout/empty-layout';
-import MainLayout from './layout/main-layout';
+import AppRoute from './hoc/AppRoute'
+import EmptyLayout from './layout/EmptyLayout';
+import MainLayout from './layout/MainLayout';
 
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
