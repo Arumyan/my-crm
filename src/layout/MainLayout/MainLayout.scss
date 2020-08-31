@@ -5,6 +5,11 @@
   .app-content {
     padding-top: 64px;
     padding-left: 250px;
+    transition: padding 0.3s;
+
+    &.full {
+      padding-left: 7px;
+    }
 
     .app-page {
       padding: 25px;

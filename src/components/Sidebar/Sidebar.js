@@ -2,11 +2,16 @@ import React from 'react'
 import './Sidebar.scss'
 import { NavLink } from 'react-router-dom';
 
-const Sidebar = (props) => {
+const Sidebar = ({isOpen}) => {
+
+  let sidebarClasses = isOpen ? ' open' : '';
+
+  console.log(isOpen)
+
   return (
-    <ul class="sidenav app-sidenav open">
+    <ul className={'sidenav app-sidenav' + sidebarClasses}>
       <li>
-        <NavLink to='/' className="waves-effect waves-orange pointer">Счет</NavLink>
+        <NavLink to='/' exact className="waves-effect waves-orange pointer">Счет</NavLink>
       </li>
       <li>
         <NavLink to='/history' className="waves-effect waves-orange pointer">История</NavLink>
