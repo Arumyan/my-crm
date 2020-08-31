@@ -3,7 +3,7 @@ import './App.scss';
 
 import AppRoute from './hoc/AppRoute'
 import EmptyLayout from './Layout/EmptyLayout';
-import MainLayout from './Layout/MainLayout';
+import MainLayout from './Layout/MainLayout/MainLayout';
 
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';

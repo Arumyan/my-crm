@@ -1,0 +1,8 @@
+.app-sidenav {
+  padding-top: 5px;
+  top: 64px;
+
+  &.open {
+    transform: translateX(0)
+  }
+}

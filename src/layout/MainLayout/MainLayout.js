@@ -1,6 +1,7 @@
 import React from 'react'
-import Nav from '../components/Nav/Nav'
-import Sidebar from '../components/Sidebar/Sidebar'
+import './MainLayout.scss'
+import Nav from '../../components/Nav/Nav'
+import Sidebar from '../../components/Sidebar/Sidebar'
 
 const MainLayout = (props) => {
   return (
