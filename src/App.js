@@ -2,8 +2,8 @@ import React from 'react';
 import './App.scss';
 
 import AppRoute from './hoc/AppRoute'
-import EmptyLayout from './layout/EmptyLayout';
-import MainLayout from './layout/MainLayout';
+import EmptyLayout from './Layout/EmptyLayout';
+import MainLayout from './Layout/MainLayout';
 
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
