@@ -8,9 +8,11 @@ const MainLayout = (props) => {
     <div className="app-main-layout">
       <Nav />
       <Sidebar/>
-      <div className="main">
-        {props.children}
-      </div>
+      <main className="app-content">
+        <div className="app-page">
+          {props.children}
+        </div>
+      </main>
     </div>
   )
 }

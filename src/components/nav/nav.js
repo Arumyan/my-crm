@@ -1,40 +1,39 @@
 import React from 'react'
 import './Nav.scss';
-import { NavLink } from 'react-router-dom';
+//import { NavLink } from 'react-router-dom';
 
 const Nav = () => {
   return (
     <nav class="navbar orange lighten-1">
       <div class="nav-wrapper">
         <div class="navbar-left">
-          <a href="#">
+          <span>
             <i class="material-icons black-text">dehaze</i>
-          </a>
+          </span>
           <span class="black-text">12.12.12</span>
         </div>
 
         <ul class="right hide-on-small-and-down">
           <li>
-            <a
+            <span
                 class="dropdown-trigger black-text"
-                href="#"
                 data-target="dropdown"
             >
               USER NAME
               <i class="material-icons right">arrow_drop_down</i>
-            </a>
+            </span>
 
             <ul id='dropdown' class='dropdown-content'>
               <li>
-                <a href="#" class="black-text">
+                <span class="black-text">
                   <i class="material-icons">account_circle</i>Профиль
-                </a>
+                </span>
               </li>
               <li class="divider" tabindex="-1"></li>
               <li>
-                <a href="#" class="black-text">
+                <span class="black-text">
                   <i class="material-icons">assignment_return</i>Выйти
-                </a>
+                </span>
               </li>
             </ul>
           </li>

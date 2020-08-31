@@ -1,6 +1,7 @@
 .app-sidenav {
   padding-top: 5px;
   top: 64px;
+  width: 250px;
 
   &.open {
     transform: translateX(0)

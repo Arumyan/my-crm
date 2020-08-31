@@ -1,4 +1,13 @@
 .app-main-layout {
   position: relative;
   min-height: 100vh;
+
+  .app-content {
+    padding-top: 64px;
+    padding-left: 250px;
+
+    .app-page {
+      padding: 25px;
+    }
+  }
 }
