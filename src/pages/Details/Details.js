@@ -1,9 +1,31 @@
-import React from 'react'
+import React from 'react';
 
 const Details = () => {
   return (
-    <div>Details</div>
-  )
-}
+    <div>
+      <div>
+        <div className='breadcrumb-wrap'>
+          <a href='/history' className='breadcrumb'>
+            История
+          </a>
+          <a href='..' className='breadcrumb'>Расход</a>
+        </div>
+        <div className='row'>
+          <div className='col s12 m6'>
+            <div className='card red'>
+              <div className='card-content white-text'>
+                <p>Описание:</p>
+                <p>Сумма:</p>
+                <p>Категория:</p>
 
-export default Details
+                <small>12.12.12</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Details;
