@@ -1,9 +1,26 @@
-import React from 'react'
+import React from 'react';
 
 const Profile = () => {
   return (
-    <div>Profile</div>
-  )
-}
+    <div>
+      <div className='page-title'>
+        <h3>Профиль</h3>
+      </div>
 
-export default Profile
+      <form className='form'>
+        <div className='input-field'>
+          <input id='description' type='text' />
+          <label for='description'>Имя</label>
+          <span className='helper-text invalid'>name</span>
+        </div>
+
+        <button className='btn waves-effect waves-light' type='submit'>
+          Обновить
+          <i className='material-icons right'>send</i>
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default Profile;

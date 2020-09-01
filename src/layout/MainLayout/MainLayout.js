@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import './MainLayout.scss'
 import Nav from '../../components/Nav/Nav'
 import Sidebar from '../../components/Sidebar/Sidebar'
+import BtnAddNewItem from '../../components/BtnAddNewItem/BtnAddNewItem'
 
 const MainLayout = (props) => {
 
@@ -23,6 +24,8 @@ const MainLayout = (props) => {
           {props.children}
         </div>
       </main>
+
+      <BtnAddNewItem />
     </div>
   )
 }
