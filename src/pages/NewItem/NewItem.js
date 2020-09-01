@@ -31,13 +31,13 @@ const NewItem = () => {
 
         <div className='input-field'>
           <input id='amount' type='number' />
-          <label for='amount'>Сумма</label>
+          <label htmlFor='amount'>Сумма</label>
           <span className='helper-text invalid'>amount пароль</span>
         </div>
 
         <div className='input-field'>
           <input id='description' type='text' />
-          <label for='description'>Описание</label>
+          <label htmlFor='description'>Описание</label>
           <span className='helper-text invalid'>description пароль</span>
         </div>
 

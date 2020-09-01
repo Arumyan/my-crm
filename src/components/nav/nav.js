@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import './Nav.scss';
 import M from 'materialize-css';
 import { NavLink } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom';
 const Nav = ({toggleNav}) => {
 
   const dropdownTrigger = useRef(null);
+  const [date] = useState(new Date());
 
   useEffect( () => {
     M.Dropdown.init(dropdownTrigger.current, {
@@ -20,7 +21,7 @@ const Nav = ({toggleNav}) => {
           <span className="navbar-toggle" onClick={toggleNav}>
             <i className="material-icons black-text">dehaze</i>
           </span>
-          <span className="black-text">12.12.12</span>
+          <span className="black-text">{date.toLocaleString()}</span>
         </div>
 
         <ul className="right hide-on-small-and-down">
