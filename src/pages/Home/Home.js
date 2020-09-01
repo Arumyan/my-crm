@@ -3,32 +3,32 @@ import React from 'react';
 const Home = () => {
   return (
     <div>
-      <div class='page-title'>
+      <div className='page-title'>
         <h3>Счет</h3>
 
-        <button class='btn waves-effect waves-light btn-small'>
-          <i class='material-icons'>refresh</i>
+        <button className='btn waves-effect waves-light btn-small'>
+          <i className='material-icons'>refresh</i>
         </button>
       </div>
 
-      <div class='row'>
-        <div class='col s12 m6 l4'>
-          <div class='card light-blue bill-card'>
-            <div class='card-content white-text'>
-              <span class='card-title'>Счет в валюте</span>
+      <div className='row'>
+        <div className='col s12 m6 l4'>
+          <div className='card light-blue bill-card'>
+            <div className='card-content white-text'>
+              <span className='card-title'>Счет в валюте</span>
 
-              <p class='currency-line'>
+              <p className='currency-line'>
                 <span>12.0 Р</span>
               </p>
             </div>
           </div>
         </div>
 
-        <div class='col s12 m6 l8'>
-          <div class='card orange darken-3 bill-card'>
-            <div class='card-content white-text'>
-              <div class='card-header'>
-                <span class='card-title'>Курс валют</span>
+        <div className='col s12 m6 l8'>
+          <div className='card orange darken-3 bill-card'>
+            <div className='card-content white-text'>
+              <div className='card-header'>
+                <span className='card-title'>Курс валют</span>
               </div>
               <table>
                 <thead>

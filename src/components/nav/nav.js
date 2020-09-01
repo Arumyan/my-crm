@@ -1,8 +1,18 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import './Nav.scss';
-//import { NavLink } from 'react-router-dom';
+import M from 'materialize-css';
+import { NavLink } from 'react-router-dom';
 
 const Nav = ({toggleNav}) => {
+
+  const dropdownTrigger = useRef(null);
+
+  useEffect( () => {
+    M.Dropdown.init(dropdownTrigger.current, {
+      constrainWidth: true
+    });
+  })
+
   return (
     <nav className="navbar orange lighten-1">
       <div className="nav-wrapper">
@@ -18,6 +28,7 @@ const Nav = ({toggleNav}) => {
             <span
                 className="dropdown-trigger black-text"
                 data-target="dropdown"
+                ref={dropdownTrigger}
             >
               USER NAME
               <i className="material-icons right">arrow_drop_down</i>
@@ -25,15 +36,17 @@ const Nav = ({toggleNav}) => {
 
             <ul id='dropdown' className='dropdown-content'>
               <li>
-                <span className="black-text">
-                  <i className="material-icons">account_circle</i>Профиль
-                </span>
+                <NavLink to='/profile'>
+                  <i className="material-icons black-text">account_circle</i>
+                  <span className="black-text">Профиль</span>
+                </NavLink>
               </li>
               <li className="divider"></li>
               <li>
-                <span className="black-text">
-                  <i className="material-icons">assignment_return</i>Выйти
-                </span>
+                <NavLink to='/login'>
+                  <i className="material-icons black-text">assignment_return</i>
+                  <span className="black-text">Выйти</span>
+                </NavLink>
               </li>
             </ul>
           </li>

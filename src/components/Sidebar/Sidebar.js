@@ -6,8 +6,6 @@ const Sidebar = ({isOpen}) => {
 
   let sidebarClasses = isOpen ? ' open' : '';
 
-  console.log(isOpen)
-
   return (
     <ul className={'sidenav app-sidenav' + sidebarClasses}>
       <li>
