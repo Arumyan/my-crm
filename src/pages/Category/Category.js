@@ -18,13 +18,13 @@ const Category = () => {
               <form>
                 <div className='input-field'>
                   <input id='name' type='text' />
-                  <label for='name'>Название</label>
+                  <label htmlFor='name'>Название</label>
                   <span className='helper-text invalid'>Введите название</span>
                 </div>
 
                 <div className='input-field'>
                   <input id='limit' type='number' />
-                  <label for='limit'>Лимит</label>
+                  <label htmlFor='limit'>Лимит</label>
                   <span className='helper-text invalid'>Минимальная величина</span>
                 </div>
 
@@ -51,13 +51,13 @@ const Category = () => {
 
                 <div className='input-field'>
                   <input type='text' id='name' />
-                  <label for='name'>Название</label>
+                  <label htmlFor='name'>Название</label>
                   <span className='helper-text invalid'>TITLE</span>
                 </div>
 
                 <div className='input-field'>
                   <input id='limit' type='number' />
-                  <label for='limit'>Лимит</label>
+                  <label htmlFor='limit'>Лимит</label>
                   <span className='helper-text invalid'>LIMIT</span>
                 </div>
 

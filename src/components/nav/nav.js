@@ -6,12 +6,21 @@ import { NavLink } from 'react-router-dom';
 const Nav = ({toggleNav}) => {
 
   const dropdownTrigger = useRef(null);
-  const [date] = useState(new Date());
+  const [date, setDate] = useState(new Date());
 
   useEffect( () => {
     M.Dropdown.init(dropdownTrigger.current, {
       constrainWidth: true
     });
+
+    // const timer = setInterval(() => {
+    //   setDate(new Date());
+    // }, 1000)
+
+    // return () => {
+    //   console.log('unmount')
+    //   clearInterval(timer);
+    // }
   })
 
   return (
