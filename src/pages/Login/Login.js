@@ -1,18 +1,28 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
 
 import firebase from 'firebase/app';
 
+import {setAuthDataAction} from '../../redux/reducers/authReducer';
+
+
 const Login = () => {
 
-  const [isLogin, setIsLogin] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const isAuthFromState = useSelector((state) => state.authReducer.isAuth);
+  const emailFromState = useSelector((state) => state.authReducer.email);
+  const passwordFromState = useSelector((state) => state.authReducer.password);
+
+  const [email, setEmail] = useState(emailFromState);
+  const [password, setPassword] = useState(passwordFromState);
+
+  const dispatch = useDispatch();
 
   const login = async (email, password) => {
+
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
-      setIsLogin(true);
+      dispatch(setAuthDataAction({email, password, isAuth: true}));
     } catch (e) {
       //console.log(e);
     }
@@ -23,7 +33,7 @@ const Login = () => {
     login(email, password)
   };
 
-  if(isLogin) {
+  if(isAuthFromState) {
     return <Redirect to='/' />
   }
 
@@ -38,7 +48,7 @@ const Login = () => {
             type='text'
             value={email}
             className='validate'
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {setEmail(e.target.value)}}
           />
           <label htmlFor='email'>Email</label>
           <small className='helper-text invalid'>Email</small>
@@ -50,7 +60,7 @@ const Login = () => {
             type='password'
             value={password}
             className='validate'
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {setPassword(e.target.value)}}
           />
           <label htmlFor='password'>Пароль</label>
           <small className='helper-text invalid'>Password</small>
