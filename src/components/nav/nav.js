@@ -10,7 +10,7 @@ const Nav = ({toggleNav}) => {
 
   useEffect( () => {
     M.Dropdown.init(dropdownTrigger.current, {
-      constrainWidth: true
+      //constrainWidth: true
     });
 
     // const timer = setInterval(() => {
@@ -33,7 +33,7 @@ const Nav = ({toggleNav}) => {
           <span className="black-text">{date.toLocaleString()}</span>
         </div>
 
-        <ul className="right hide-on-small-and-down">
+        <ul className="right hide-on-small-and-down dropdown-container">
           <li>
             <span
                 className="dropdown-trigger black-text"
