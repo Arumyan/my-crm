@@ -14,9 +14,7 @@ const Nav = ({toggleNav, history}) => {
   const dispatch = useDispatch();
 
   useEffect( () => {
-    M.Dropdown.init(dropdownTrigger.current, {
-      //constrainWidth: true
-    });
+    M.Dropdown.init(dropdownTrigger.current);
 
     // const timer = setInterval(() => {
     //   setDate(new Date());
@@ -28,7 +26,9 @@ const Nav = ({toggleNav, history}) => {
     // }
   })
 
-  const logout = () => {
+  const logout = (e) => {
+    e.preventDefault();
+    
     history.push('/login');
     dispatch(setAuthDataAction({email: '', password: '', isAuth: false}))
   }
@@ -63,10 +63,10 @@ const Nav = ({toggleNav, history}) => {
               </li>
               <li className="divider"></li>
               <li>
-                <span className="dropdown-item" onClick={logout}>
+                <a href="temp" className="dropdown-item" onClick={logout}>
                   <i className="material-icons black-text">assignment_return</i>
                   <span className="black-text">Выйти</span>
-                </span>
+                </a>
               </li>
             </ul>
           </li>
