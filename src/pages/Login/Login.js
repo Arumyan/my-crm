@@ -11,15 +11,23 @@ const Login = () => {
 
   const [email, setEmail] = useState(emailFromState);
   const [password, setPassword] = useState(passwordFromState);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const dispatch = useDispatch();
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
 
-    authAPI.login(email, password).then(() => {
-      dispatch(setAuthDataAction({ email, password, isAuth: true }));
-    });
+    setErrorMessage(null);
+
+    authAPI
+      .login(email, password)
+      .then(() => {
+        dispatch(setAuthDataAction({ email, password, isAuth: true }));
+      })
+      .catch((e) => {
+        setErrorMessage(e.message);
+      });
   };
 
   if (isAuth) {
@@ -42,7 +50,6 @@ const Login = () => {
             }}
           />
           <label htmlFor='email'>Email</label>
-          <small className='helper-text invalid'>Email</small>
         </div>
 
         <div className='input-field'>
@@ -56,9 +63,10 @@ const Login = () => {
             }}
           />
           <label htmlFor='password'>Пароль</label>
-          <small className='helper-text invalid'>Password</small>
         </div>
+        <span className="red lighten-1">{errorMessage}</span>
       </div>
+
       <div className='card-action'>
         <div>
           <button
