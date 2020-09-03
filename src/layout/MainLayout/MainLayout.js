@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import './MainLayout.scss'
-import Nav from '../../components/Nav/Nav'
+import Nav from '../../components/Navigation/Navigation'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import BtnAddNewItem from '../../components/BtnAddNewItem/BtnAddNewItem'
 
