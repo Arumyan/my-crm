@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
-
-import firebase from 'firebase/app';
-
+import { authAPI } from '../../api/authAPI';
 import { setAuthDataAction } from '../../redux/reducers/authReducer';
 
 const Login = () => {
@@ -16,18 +14,11 @@ const Login = () => {
 
   const dispatch = useDispatch();
 
-  const login = async (email, password) => {
-    try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
-      dispatch(setAuthDataAction({ email, password, isAuth: true }));
-    } catch (e) {
-      //console.log(e);
-    }
-  };
-
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    login(email, password);
+    authAPI.login(email, password).then(() => {
+      dispatch(setAuthDataAction({ email, password, isAuth: true }));
+    });
   };
 
   if (isAuth) {
@@ -80,7 +71,7 @@ const Login = () => {
 
         <p className='center'>
           Нет аккаунта?
-          <NavLink to={'/register'}>Зарегистрироваться</NavLink>
+          <NavLink to={'/register'}> Зарегистрироваться</NavLink>
         </p>
       </div>
     </form>

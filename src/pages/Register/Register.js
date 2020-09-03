@@ -1,25 +1,75 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink, Redirect } from 'react-router-dom';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { authAPI } from '../../api/authAPI';
+import { setAuthDataAction } from '../../redux/reducers/authReducer';
 
 const Register = () => {
+  const isAuth = useSelector((state) => state.authReducer.isAuth);
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+
+  const dispatch = useDispatch();
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault()
+
+    authAPI.register({email, password, name}).then(() => {
+      dispatch(setAuthDataAction({email, password, isAuth: true}))
+    })
+  }
+
+  if (isAuth) {
+    return <Redirect to='/' />;
+  }
+
   return (
-    <form class='card auth-card'>
-      <div class='card-content'>
-        <span class='card-title'>Домашняя бухгалтерия</span>
-        <div class='input-field'>
-          <input id='email' type='text' />
-          <label for='email'>Email</label>
-          <small class='helper-text invalid'>Email</small>
+    <form className='card auth-card' onSubmit={onSubmitHandler}>
+      <div className='card-content'>
+        <span className='card-title'>Домашняя бухгалтерия</span>
+
+        <div className='input-field'>
+          <input
+            id='email'
+            type='text'
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+          />
+          <label htmlFor='email'>Email</label>
+          <small className='helper-text invalid'>Email</small>
         </div>
-        <div class='input-field'>
-          <input id='password' type='password' class='validate' />
-          <label for='password'>Пароль</label>
-          <small class='helper-text invalid'>Password</small>
+
+        <div className='input-field'>
+          <input
+            id='password'
+            type='password'
+            className='validate'
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
+          <label htmlFor='password'>Пароль</label>
+          <small className='helper-text invalid'>Password</small>
         </div>
-        <div class='input-field'>
-          <input id='name' type='text' class='validate' />
-          <label for='name'>Имя</label>
-          <small class='helper-text invalid'>Name</small>
+
+        <div className='input-field'>
+          <input
+            id='name'
+            type='text'
+            className='validate'
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+          />
+          <label htmlFor='name'>Имя</label>
+          <small className='helper-text invalid'>Name</small>
         </div>
         <p>
           <label>
@@ -28,18 +78,18 @@ const Register = () => {
           </label>
         </p>
       </div>
-      <div class='card-action'>
+      <div className='card-action'>
         <div>
           <button
-            class='btn waves-effect waves-light auth-submit'
+            className='btn waves-effect waves-light auth-submit'
             type='submit'
           >
             Зарегистрироваться
-            <i class='material-icons right'>send</i>
+            <i className='material-icons right'>send</i>
           </button>
         </div>
 
-        <p class='center'>
+        <p className='center'>
           Уже есть аккаунт?
           <NavLink to={'/login'}>Войти</NavLink>
         </p>

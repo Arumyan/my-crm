@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setAuthDataAction } from '../../redux/reducers/authReducer';
+import {authAPI} from '../../api/authAPI'
 
 const Nav = ({toggleNav, history}) => {
 
@@ -28,8 +29,8 @@ const Nav = ({toggleNav, history}) => {
 
   const logout = (e) => {
     e.preventDefault();
-    
-    history.push('/login');
+    authAPI.logout();
+    history.push('/login?message=logout');
     dispatch(setAuthDataAction({email: '', password: '', isAuth: false}))
   }
 
