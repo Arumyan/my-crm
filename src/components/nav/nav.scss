@@ -23,6 +23,10 @@
 
       .dropdown-content {
         min-width: 160px;
+
+        .dropdown-item {
+          display: block;
+        }
       }
     }
 

@@ -1,34 +1,41 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
 
 import firebase from 'firebase/app';
 
-const Login = () => {
+import { setAuthDataAction } from '../../redux/reducers/authReducer';
 
-  const [isLogin, setIsLogin] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const Login = () => {
+  const isAuth = useSelector((state) => state.authReducer.isAuth);
+  const emailFromState = useSelector((state) => state.authReducer.email);
+  const passwordFromState = useSelector((state) => state.authReducer.password);
+
+  const [email, setEmail] = useState(emailFromState);
+  const [password, setPassword] = useState(passwordFromState);
+
+  const dispatch = useDispatch();
 
   const login = async (email, password) => {
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
-      setIsLogin(true);
+      dispatch(setAuthDataAction({ email, password, isAuth: true }));
     } catch (e) {
       //console.log(e);
     }
   };
 
-  const handleSumbit = (e) => {
+  const onSubmitHandler = (e) => {
     e.preventDefault();
-    login(email, password)
+    login(email, password);
   };
 
-  if(isLogin) {
-    return <Redirect to='/' />
+  if (isAuth) {
+    return <Redirect to='/' />;
   }
 
   return (
-    <form className='card auth-card' onSubmit={handleSumbit}>
+    <form className='card auth-card' onSubmit={onSubmitHandler}>
       <div className='card-content'>
         <span className='card-title'>Домашняя бухгалтерия</span>
 
@@ -38,7 +45,9 @@ const Login = () => {
             type='text'
             value={email}
             className='validate'
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
           <label htmlFor='email'>Email</label>
           <small className='helper-text invalid'>Email</small>
@@ -50,7 +59,9 @@ const Login = () => {
             type='password'
             value={password}
             className='validate'
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
           <label htmlFor='password'>Пароль</label>
           <small className='helper-text invalid'>Password</small>

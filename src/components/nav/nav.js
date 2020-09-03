@@ -1,12 +1,17 @@
 import React, {useState, useEffect, useRef} from 'react'
 import './Nav.scss';
 import M from 'materialize-css';
+import { withRouter } from 'react-router';
 import { NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setAuthDataAction } from '../../redux/reducers/authReducer';
 
-const Nav = ({toggleNav}) => {
+const Nav = ({toggleNav, history}) => {
 
   const dropdownTrigger = useRef(null);
-  const [date, setDate] = useState(new Date());
+  const [date] = useState(new Date());
+
+  const dispatch = useDispatch();
 
   useEffect( () => {
     M.Dropdown.init(dropdownTrigger.current, {
@@ -22,6 +27,11 @@ const Nav = ({toggleNav}) => {
     //   clearInterval(timer);
     // }
   })
+
+  const logout = () => {
+    history.push('/login');
+    dispatch(setAuthDataAction({email: '', password: '', isAuth: false}))
+  }
 
   return (
     <nav className="navbar orange lighten-1">
@@ -53,10 +63,10 @@ const Nav = ({toggleNav}) => {
               </li>
               <li className="divider"></li>
               <li>
-                <NavLink to='/login'>
+                <span className="dropdown-item" onClick={logout}>
                   <i className="material-icons black-text">assignment_return</i>
                   <span className="black-text">Выйти</span>
-                </NavLink>
+                </span>
               </li>
             </ul>
           </li>
@@ -66,4 +76,4 @@ const Nav = ({toggleNav}) => {
   )
 }
 
-export default Nav
+export default withRouter(Nav)
