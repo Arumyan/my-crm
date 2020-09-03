@@ -16,6 +16,7 @@ const Login = () => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
+
     authAPI.login(email, password).then(() => {
       dispatch(setAuthDataAction({ email, password, isAuth: true }));
     });
