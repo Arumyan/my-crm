@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
-
-import firebase from 'firebase/app';
-
+import { authAPI } from '../../api/authAPI';
 import { setAuthDataAction } from '../../redux/reducers/authReducer';
 
 const Login = () => {
@@ -13,21 +11,23 @@ const Login = () => {
 
   const [email, setEmail] = useState(emailFromState);
   const [password, setPassword] = useState(passwordFromState);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const dispatch = useDispatch();
 
-  const login = async (email, password) => {
-    try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
-      dispatch(setAuthDataAction({ email, password, isAuth: true }));
-    } catch (e) {
-      //console.log(e);
-    }
-  };
-
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    login(email, password);
+
+    setErrorMessage(null);
+
+    authAPI
+      .login(email, password)
+      .then(() => {
+        dispatch(setAuthDataAction({ email, password, isAuth: true }));
+      })
+      .catch((e) => {
+        setErrorMessage(e.message);
+      });
   };
 
   if (isAuth) {
@@ -50,7 +50,6 @@ const Login = () => {
             }}
           />
           <label htmlFor='email'>Email</label>
-          <small className='helper-text invalid'>Email</small>
         </div>
 
         <div className='input-field'>
@@ -64,9 +63,10 @@ const Login = () => {
             }}
           />
           <label htmlFor='password'>Пароль</label>
-          <small className='helper-text invalid'>Password</small>
         </div>
+        <span className="red lighten-1">{errorMessage}</span>
       </div>
+
       <div className='card-action'>
         <div>
           <button
@@ -80,7 +80,7 @@ const Login = () => {
 
         <p className='center'>
           Нет аккаунта?
-          <NavLink to={'/register'}>Зарегистрироваться</NavLink>
+          <NavLink to={'/register'}> Зарегистрироваться</NavLink>
         </p>
       </div>
     </form>

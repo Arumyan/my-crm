@@ -32,7 +32,3 @@ firebase.auth().onAuthStateChanged(() => {
     document.getElementById('app')
   );
 })
-
-
-
-
