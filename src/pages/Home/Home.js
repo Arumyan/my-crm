@@ -1,6 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import { useSelector } from 'react-redux';
 
 const Home = () => {
+
+  const info = useSelector((state) => state.infoReducer.info);
+
   return (
     <div>
       <div className='page-title'>
@@ -18,7 +22,7 @@ const Home = () => {
               <span className='card-title'>Счет в валюте</span>
 
               <p className='currency-line'>
-                <span>12.0 Р</span>
+                <span>{info.bill}</span>
               </p>
             </div>
           </div>

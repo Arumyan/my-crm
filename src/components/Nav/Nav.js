@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { setAuthDataAction } from '../../redux/reducers/authReducer';
 import {authAPI} from '../../api/authAPI'
 
-const Nav = ({toggleNav, history}) => {
+const Nav = ({toggleNav, history, userName}) => {
 
   const dropdownTrigger = useRef(null);
   const [date] = useState(new Date());
@@ -51,7 +51,7 @@ const Nav = ({toggleNav, history}) => {
                 data-target="dropdown"
                 ref={dropdownTrigger}
             >
-              USER NAME
+              {userName ? userName : 'user'}
               <i className="material-icons right">arrow_drop_down</i>
             </span>
 
