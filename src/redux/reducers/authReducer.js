@@ -1,18 +1,16 @@
 // ACTION
 //----------------------------------------------//
-export const SET_AUTH_DATA = 'auth/SET_AUTH_DATA';
+export const SET_AUTH = 'auth/SET_AUTH';
 
 // REDUCER
 //----------------------------------------------//
 const initialState = {
-  email: '',
-  password: '',
-  isAuth: false,
+  isAuth: false
 };
 
 export default function authReducer(state = initialState, action) {
   switch (action.type) {
-    case SET_AUTH_DATA:
+    case SET_AUTH:
       return {
         ...state,
         ...action.payload,
@@ -25,6 +23,6 @@ export default function authReducer(state = initialState, action) {
 
 // ACTION CREATOR
 //----------------------------------------------//
-export const setAuthDataAction = ({email, password, isAuth}) => {
-  return { type: SET_AUTH_DATA, payload: {email, password, isAuth}}
+export const setAuthActionCreator = (authData) => {
+  return { type: SET_AUTH, payload: authData}
 }

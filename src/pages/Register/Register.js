@@ -3,7 +3,7 @@ import { NavLink, Redirect } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { authAPI } from '../../api/authAPI';
-import { setAuthDataAction } from '../../redux/reducers/authReducer';
+import { setAuthActionCreator } from '../../redux/reducers/authReducer';
 
 const Register = () => {
   const isAuth = useSelector((state) => state.authReducer.isAuth);
@@ -18,7 +18,7 @@ const Register = () => {
     e.preventDefault()
 
     authAPI.register({email, password, name}).then(() => {
-      dispatch(setAuthDataAction({email, password, isAuth: true}))
+      dispatch(setAuthActionCreator({isAuth: true}))
     })
   }
 
