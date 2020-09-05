@@ -16,14 +16,13 @@ import NewItem from './Pages/NewItem/NewItem';
 import Planning from './Pages/Planning/Planning';
 import Profile from './Pages/Profile/Profile';
 
-
 import {
   BrowserRouter as Router,
   Switch
 } from 'react-router-dom';
 
-
 const App = () => {
+
   return (
     <Router>
       <Switch>

@@ -4,7 +4,7 @@ import M from 'materialize-css';
 import { withRouter } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setAuthDataAction } from '../../redux/reducers/authReducer';
+import { setAuthActionCreator } from '../../redux/reducers/authReducer';
 import {authAPI} from '../../api/authAPI'
 
 const Nav = ({toggleNav, history, userName}) => {
@@ -31,7 +31,7 @@ const Nav = ({toggleNav, history, userName}) => {
     e.preventDefault();
     authAPI.logout();
     history.push('/login?message=logout');
-    dispatch(setAuthDataAction({email: '', password: '', isAuth: false}))
+    dispatch(setAuthActionCreator({isAuth: false}))
   }
 
   return (

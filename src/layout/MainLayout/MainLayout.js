@@ -3,23 +3,31 @@ import './MainLayout.scss'
 import Nav from '../../components/Nav/Nav'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import BtnAddNewItem from '../../components/BtnAddNewItem/BtnAddNewItem'
-import { Redirect } from 'react-router-dom';
+//import { Redirect } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 import {infoAPI} from '../../api/infoAPI'
 import { setInfoAction } from '../../redux/reducers/infoReducer';
 
+import firebase from 'firebase/app';
+
 const MainLayout = (props) => {
 
-  const isAuth = useSelector((state) => state.authReducer.isAuth);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    infoAPI.fetchInfo().then((data) => {
-      dispatch(setInfoAction(data))
-    }).catch((e) => {
-      console.log(e)
-    })
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        infoAPI.fetchInfo().then((data) => {
+          dispatch(setInfoAction(data))
+        }).catch((e) => {
+          console.log(e)
+        })
+      } else {
+        console.log('Пользователь не авторизован')
+      }
+    });
   }, [dispatch])
 
   const [isOpen, setIsOpen] =  useState(true);
@@ -31,10 +39,6 @@ const MainLayout = (props) => {
   }
 
   let appContentClasses = isOpen ? '' : ' full';
-
-  // if (!isAuth) {
-  //   return <Redirect to='/login' />;
-  // }
 
   return (
     <div className="app-main-layout">

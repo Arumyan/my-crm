@@ -1,33 +1,51 @@
 import React, { useState } from 'react';
+import './Login.scss'
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
 import { authAPI } from '../../api/authAPI';
-import { setAuthDataAction } from '../../redux/reducers/authReducer';
+//import Loader from '../../components/Loader/Loader';
+import { setAuthActionCreator } from '../../redux/reducers/authReducer';
 
 const Login = () => {
-  const isAuth = useSelector((state) => state.authReducer.isAuth);
-  const emailFromState = useSelector((state) => state.authReducer.email);
-  const passwordFromState = useSelector((state) => state.authReducer.password);
-
-  const [email, setEmail] = useState(emailFromState);
-  const [password, setPassword] = useState(passwordFromState);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const isAuth = useSelector((state) => state.authReducer.isAuth)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
+  const formValidate = () => {
+    if(email === '') {
+      setError('Email не должен быть пустым')
+      return false
+    }
+    if(password === '') {
+      setError('Пароль не должен быть пустым')
+      return false
+    }
+
+    return true
+  }
+
   const onSubmitHandler = (e) => {
     e.preventDefault();
+    setError(null);
 
-    setErrorMessage(null);
+    if(formValidate()) {
+      setLoading(true);
 
-    authAPI
+      authAPI
       .login(email, password)
       .then(() => {
-        dispatch(setAuthDataAction({ email, password, isAuth: true }));
+        setLoading(false);
+        dispatch(setAuthActionCreator({ isAuth: true }));
       })
       .catch((e) => {
-        setErrorMessage(e.message);
+        setLoading(false);
+        setError(e.message);
       });
+    }
   };
 
   if (isAuth) {
@@ -37,7 +55,7 @@ const Login = () => {
   return (
     <form className='card auth-card' onSubmit={onSubmitHandler}>
       <div className='card-content'>
-        <span className='card-title'>Домашняя бухгалтерия</span>
+        <h1 className='card-title'>Домашняя бухгалтерия</h1>
 
         <div className='input-field'>
           <input
@@ -64,14 +82,20 @@ const Login = () => {
           />
           <label htmlFor='password'>Пароль</label>
         </div>
-        <span className="red lighten-1">{errorMessage}</span>
+        
+        {
+          error && (<span className='form-message red-text text-lighten-1'>{error}</span>)
+        }
+        
+
       </div>
 
       <div className='card-action'>
         <div>
-          <button
+          <button 
             className='btn waves-effect waves-light auth-submit'
             type='submit'
+            disabled={loading}
           >
             Войти
             <i className='material-icons right'>send</i>
