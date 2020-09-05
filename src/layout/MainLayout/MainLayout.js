@@ -32,9 +32,9 @@ const MainLayout = (props) => {
 
   let appContentClasses = isOpen ? '' : ' full';
 
-  if (!isAuth) {
-    return <Redirect to='/login' />;
-  }
+  // if (!isAuth) {
+  //   return <Redirect to='/login' />;
+  // }
 
   return (
     <div className="app-main-layout">
