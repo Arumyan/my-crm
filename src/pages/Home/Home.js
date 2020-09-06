@@ -12,6 +12,7 @@ const Home = () => {
 
   useEffect(() => {
     currencyAPI.getCurrency().then((responce) => {
+      console.log(responce)
       setCurrency(responce)
       setLoading(false)
     });
