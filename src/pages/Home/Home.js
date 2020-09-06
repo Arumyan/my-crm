@@ -1,60 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import Loader from '../../components/Loader/Loader';
+import HomeBill from './HomeBill/HomeBill';
+import HomeCurrency from './HomeCurrency/HomeCurrency';
+import {currencyAPI} from '../../api/currencyAPI';
 
 const Home = () => {
+  const [loading, setLoading] = useState(true);
+  const bill = useSelector((state) => state.infoReducer.info.bill);
+  const [currency, setCurrency] = useState(0);
 
-  const info = useSelector((state) => state.infoReducer.info);
+  const getCurrency = () => {
+    setLoading(true)
+    currencyAPI.getCurrency().then((responce) => {
+      setCurrency(responce)
+      setLoading(false)
+    });
+  }
+
+  useEffect(() => {
+    getCurrency()
+  }, [])
+
+  const HomeContent = loading ? (
+    <Loader />
+  ) : (
+    <div className='row'>
+      <HomeBill bill={bill} currency={currency}/>
+      <HomeCurrency currency={currency}/>
+    </div>
+  );
 
   return (
     <div>
       <div className='page-title'>
         <h3>Счет</h3>
 
-        <button className='btn waves-effect waves-light btn-small'>
+        <button className='btn waves-effect waves-light btn-small' onClick={getCurrency}>
           <i className='material-icons'>refresh</i>
         </button>
       </div>
 
-      <div className='row'>
-        <div className='col s12 m6 l4'>
-          <div className='card light-blue bill-card'>
-            <div className='card-content white-text'>
-              <span className='card-title'>Счет в валюте</span>
-
-              <p className='currency-line'>
-                <span>{info.bill}</span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className='col s12 m6 l8'>
-          <div className='card orange darken-3 bill-card'>
-            <div className='card-content white-text'>
-              <div className='card-header'>
-                <span className='card-title'>Курс валют</span>
-              </div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Валюта</th>
-                    <th>Курс</th>
-                    <th>Дата</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr>
-                    <td>руб</td>
-                    <td>12121</td>
-                    <td>12.12.12</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+      {HomeContent}
     </div>
   );
 };
