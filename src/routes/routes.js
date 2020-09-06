@@ -7,6 +7,7 @@ import Planning from '../Pages/Planning/Planning';
 import Profile from '../Pages/Profile/Profile';
 import Login from '../Pages/Login/Login';
 import Register from '../Pages/Register/Register';
+import Page404 from '../Pages/Page404/Page404';
 
 import EmptyLayout from '../Layout/EmptyLayout/EmptyLayout';
 import MainLayout from '../Layout/MainLayout/MainLayout';
@@ -65,5 +66,11 @@ export const routes = [
     exact: true,
     component: Register,
     layout: EmptyLayout
+  },
+  {
+    path: '*',
+    exact: false,
+    component: Page404,
+    layout: MainLayout
   }
 ]
