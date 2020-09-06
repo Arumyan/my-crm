@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const App = () => {
   const dispatch = useDispatch();
-  const isAuth = useSelector((state) => state.authReducer.isAuth)
+  //const isAuth = useSelector((state) => state.authReducer.isAuth)
 
   useEffect(() => {
 
