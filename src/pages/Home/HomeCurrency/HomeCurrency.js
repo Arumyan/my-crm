@@ -1,6 +1,8 @@
 import React from 'react';
 
-const HomeCurrency = () => {
+const HomeCurrency = ({ currency }) => {
+  const date = new Date();
+
   return (
     <div className='col s12 m6 l8'>
       <div className='card orange darken-3 bill-card'>
@@ -18,11 +20,15 @@ const HomeCurrency = () => {
             </thead>
 
             <tbody>
-              <tr>
-                <td>руб</td>
-                <td>12121</td>
-                <td>12.12.12</td>
-              </tr>
+              {Object.keys(currency).map((cur) => {
+                return (
+                  <tr key={cur}>
+                    <td>{cur}</td>
+                    <td>{currency[cur]}</td>
+                    <td>{date.toLocaleString()}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

@@ -1,0 +1,17 @@
+.currency-list {
+
+  .currency-item {
+    margin: 0 0 15px;
+    padding: 10px 0;
+    font-size: 18px;
+    border-bottom: 1px solid #fff;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .currency-item-value {
+      margin-left: 5px;
+    }
+  }
+}

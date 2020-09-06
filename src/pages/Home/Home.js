@@ -7,23 +7,27 @@ import {currencyAPI} from '../../api/currencyAPI';
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
-  const info = useSelector((state) => state.infoReducer.info);
+  const bill = useSelector((state) => state.infoReducer.info.bill);
   const [currency, setCurrency] = useState(0);
 
-  useEffect(() => {
+  const getCurrency = () => {
+    setLoading(true)
     currencyAPI.getCurrency().then((responce) => {
-      console.log(responce)
       setCurrency(responce)
       setLoading(false)
     });
+  }
+
+  useEffect(() => {
+    getCurrency()
   }, [])
 
   const HomeContent = loading ? (
     <Loader />
   ) : (
     <div className='row'>
-      <HomeBill bill={info.bill} />
-      <HomeCurrency />
+      <HomeBill bill={bill} currency={currency}/>
+      <HomeCurrency currency={currency}/>
     </div>
   );
 
@@ -32,7 +36,7 @@ const Home = () => {
       <div className='page-title'>
         <h3>Счет</h3>
 
-        <button className='btn waves-effect waves-light btn-small'>
+        <button className='btn waves-effect waves-light btn-small' onClick={getCurrency}>
           <i className='material-icons'>refresh</i>
         </button>
       </div>

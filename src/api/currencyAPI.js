@@ -5,11 +5,11 @@ export const currencyAPI = {
       setTimeout(() => {
         const data = {
           EUR: 1,
-          USA: 1.12,
+          USD: 1.12,
           RUB: 75.45,
         };
         resolve(data);
-      }, 5000);
+      }, 2000);
     });
 
     return await promise;
