@@ -7,13 +7,11 @@ import BtnAddNewItem from '../../components/BtnAddNewItem/BtnAddNewItem'
 
 import { useSelector} from 'react-redux';
 
-
 const MainLayout = (props) => {
 
   const [isOpen, setIsOpen] =  useState(true);
   const info = useSelector((state) => state.infoReducer.info);
  
-
   const toggleNav = () => {
     setIsOpen(!isOpen);
   }
