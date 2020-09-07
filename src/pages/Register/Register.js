@@ -17,8 +17,10 @@ const Register = () => {
   const onSubmitHandler = (e) => {
     e.preventDefault()
 
-    authAPI.register({email, password, name}).then(() => {
+    authAPI.register(email, password, name).then(() => {
       dispatch(setAuthActionCreator({isAuth: true}))
+    }).catch((err) => {
+      console.log(err)
     })
   }
 
@@ -41,7 +43,6 @@ const Register = () => {
             }}
           />
           <label htmlFor='email'>Email</label>
-          <small className='helper-text invalid'>Email</small>
         </div>
 
         <div className='input-field'>
@@ -55,7 +56,6 @@ const Register = () => {
             }}
           />
           <label htmlFor='password'>Пароль</label>
-          <small className='helper-text invalid'>Password</small>
         </div>
 
         <div className='input-field'>
@@ -69,7 +69,6 @@ const Register = () => {
             }}
           />
           <label htmlFor='name'>Имя</label>
-          <small className='helper-text invalid'>Name</small>
         </div>
         <p>
           <label>

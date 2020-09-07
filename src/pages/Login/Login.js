@@ -37,7 +37,8 @@ const Login = () => {
 
       authAPI
       .login(email, password)
-      .then(() => {
+      .then((response) => {
+        console.log(response)
         setLoading(false);
         dispatch(setAuthActionCreator({ isAuth: true }));
       })
