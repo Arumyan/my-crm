@@ -3,12 +3,12 @@ import './App.scss';
 
 import { routes } from './routes/routes';
 import AppRoute from './hoc/AppRoute';
-import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import {infoAPI} from './api/infoAPI'
 import { setInfoAction } from './redux/reducers/infoReducer';
 import firebase from 'firebase/app';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 const App = () => {
   const dispatch = useDispatch();
