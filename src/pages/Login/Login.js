@@ -16,12 +16,8 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const formValidate = () => {
-    if(email === '') {
-      setError('Email не должен быть пустым')
-      return false
-    }
-    if(password === '') {
-      setError('Пароль не должен быть пустым')
+    if(email === '' || password === '') {
+      setError('Поля не должен быть пустыми')
       return false
     }
 
@@ -35,17 +31,16 @@ const Login = () => {
     if(formValidate()) {
       setLoading(true);
 
-      authAPI
-      .login(email, password)
-      .then((response) => {
-        console.log(response)
-        setLoading(false);
-        dispatch(setAuthActionCreator({ isAuth: true }));
-      })
-      .catch((e) => {
-        setLoading(false);
-        setError(e.message);
-      });
+      (async () => {
+        try {
+          await authAPI.login(email, password)
+          setLoading(false);
+          dispatch(setAuthActionCreator({ isAuth: true }));
+        } catch(e) {
+          setLoading(false);
+          setError(e.message);
+        }
+      })();
     }
   };
 

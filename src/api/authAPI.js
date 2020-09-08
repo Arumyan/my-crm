@@ -1,12 +1,12 @@
 import firebase from 'firebase/app';
 
 export const authAPI = {
-  login(email, password) {
-    return firebase.auth().signInWithEmailAndPassword(email, password).then((response) => response);
+  async login(email, password) {
+    await firebase.auth().signInWithEmailAndPassword(email, password);
   },
 
-  logout() {
-    return firebase.auth().signOut().then((response) => response);
+  async logout() {
+    await firebase.auth().signOut();
   },
 
 
