@@ -3,7 +3,7 @@ import './EmptyLayout.scss'
 
 const EmptyLayout = (props) => {
   return (
-    <div className='grey darken-1 empty-layout'>
+    <div className='empty-layout'>
       {props.children}
     </div>
   )

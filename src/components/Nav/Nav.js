@@ -31,9 +31,9 @@ const Nav = ({ toggleNav, history, userName }) => {
 
     authAPI
       .logout()
-      .then((response) => {
-        history.push('/login?message=logout');
+      .then(() => {
         dispatch(setAuthActionCreator({ isAuth: false }));
+        history.push('/login?message=logout');
       })
       .catch((err) => {
         console.log(err);
