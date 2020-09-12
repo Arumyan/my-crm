@@ -29,15 +29,15 @@ const Nav = ({ toggleNav, history, userName }) => {
   const logout = (e) => {
     e.preventDefault();
 
-    (async () => {
-      try {
-        await authAPI.logout()
+    authAPI
+      .logout()
+      .then(() => {
         dispatch(setAuthActionCreator({ isAuth: false }));
         history.push('/login?message=logout');
-      } catch(e) {
-        console.log(e);
-      }
-    })()
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
