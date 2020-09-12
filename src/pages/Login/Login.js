@@ -30,17 +30,14 @@ const Login = () => {
 
     if(formValidate()) {
       setLoading(true);
-
-      (async () => {
-        try {
-          await authAPI.login(email, password)
-          setLoading(false);
-          dispatch(setAuthActionCreator({ isAuth: true }));
-        } catch(e) {
-          setLoading(false);
-          setError(e.message);
-        }
-      })();
+      authAPI.login(email, password).then(() => {
+        setLoading(false);
+        dispatch(setAuthActionCreator({ isAuth: true }));
+      })
+      .catch((err) => {
+        setLoading(false);
+        setError(err.message);
+      })
     }
   };
 

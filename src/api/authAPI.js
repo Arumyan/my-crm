@@ -9,17 +9,13 @@ export const authAPI = {
     await firebase.auth().signOut();
   },
 
-
-  register(email, password, name) {
-
-    return firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
-      const user = firebase.auth().currentUser;
-      const uid = user ? user.uid : null;
-
-      return firebase.database().ref(`/users/${uid}/info`).set({
-        bill: 100,
-        name: name
-      })
-    })
-  }
-}
+  async register(email, password, name) {
+    await firebase.auth().createUserWithEmailAndPassword(email, password);
+    const user = await firebase.auth().currentUser;
+    const uid = user ? user.uid : null;
+    await firebase.database().ref(`/users/${uid}/info`).set({
+      bill: 100,
+      name: name,
+    });
+  },
+};

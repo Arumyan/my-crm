@@ -11,17 +11,34 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
+  const formValidate = () => {
+    if(email === '' || password === '' || name === '') {
+      setError('Поля не должен быть пустыми')
+      return false
+    }
+
+    return true
+  }
+
   const onSubmitHandler = (e) => {
     e.preventDefault()
-
-    authAPI.register(email, password, name).then(() => {
-      dispatch(setAuthActionCreator({isAuth: true}))
-    }).catch((err) => {
-      console.log(err)
-    })
+    setError(null);
+    
+    if(formValidate()) {
+      setLoading(true);
+      authAPI.register(email, password, name).then(() => {
+        dispatch(setAuthActionCreator({isAuth: true}))
+        setLoading(false);
+      }).catch((err) => {
+        setLoading(false);
+        setError(err.message);
+      })
+    }
   }
 
   if (isAuth) {
@@ -76,12 +93,18 @@ const Register = () => {
             <span>С правилами согласен</span>
           </label>
         </p>
+
+        {
+          error && (<span className='form-message red-text text-lighten-1'>{error}</span>)
+        }
       </div>
+      
       <div className='card-action'>
         <div>
           <button
             className='btn waves-effect waves-light auth-submit'
             type='submit'
+            disabled={loading}
           >
             Зарегистрироваться
             <i className='material-icons right'>send</i>
@@ -90,7 +113,7 @@ const Register = () => {
 
         <p className='center'>
           Уже есть аккаунт?
-          <NavLink to={'/login'}>Войти</NavLink>
+          <NavLink to={'/login'}> Войти</NavLink>
         </p>
       </div>
     </form>
