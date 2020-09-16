@@ -1,38 +1,53 @@
-import React, {useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.scss';
 
 import { routes } from './routes/routes';
 import AppRoute from './hoc/AppRoute';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
-import {infoAPI} from './api/infoAPI'
+import { infoAPI } from './api/infoAPI';
 import { setInfoAction } from './redux/reducers/infoReducer';
+import { setAuthActionCreator } from './redux/reducers/authReducer';
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux';
+import Loader from './components/Loader/Loader'
 
 const App = () => {
+  const [isInitialize, setInitialize] = useState(false);
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
-  //const isAuth = useSelector((state) => state.authReducer.isAuth)
 
   useEffect(() => {
-
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        infoAPI.fetchInfo().then((data) => {
-          dispatch(setInfoAction(data))
-        }).catch((e) => {
-          console.log(e)
-        })
+        infoAPI
+          .fetchInfo()
+          .then((data) => {
+            dispatch(setInfoAction(data));
+            dispatch(setAuthActionCreator({ isAuth: true }));
+            setInitialize(true)
+          })
+          .catch((e) => {
+            setInitialize(true)
+            setError(e.message)
+          });
       } else {
-        console.log('Пользователь не авторизован')
+        setInitialize(true)
+        dispatch(setAuthActionCreator({ isAuth: false }));
       }
     });
-  })
+  });
+
+  if(!isInitialize) {
+    return <Loader/>
+  }
+
+  if(error) {
+    return <div>Произошла ошибка: {error}</div>
+  }
 
   return (
     <Router>
-      {/* {!isAuth && (<Redirect to='/login'/>)} */}
-
       <Switch>
         {routes.map((route) => {
           return (
