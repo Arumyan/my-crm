@@ -9,13 +9,13 @@ import { Redirect } from 'react-router-dom';
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const bill = useSelector((state) => state.infoReducer.info.bill);
-  const [currency, setCurrency] = useState(0);
+  const [currencyRate, setCurrencyRate] = useState(0);
   const isAuth = useSelector((state) => state.authReducer.isAuth);
 
   const getCurrency = () => {
     setLoading(true);
     currencyAPI.getCurrency().then((responce) => {
-      setCurrency(responce);
+      setCurrencyRate(responce);
       setLoading(false);
     });
   };
@@ -26,7 +26,7 @@ const Home = () => {
       .getCurrency()
       .then((responce) => {
         if (!cleanupFunction) {
-          setCurrency(responce);
+          setCurrencyRate(responce);
           setLoading(false);
         }
       })
@@ -38,12 +38,23 @@ const Home = () => {
     return () => (cleanupFunction = true);
   }, []);
 
+  // transform object
+  // 1. Object.entries(currencyRate) -> [key, value]
+  // 2. map
+  // 3. Object.fromEntries - transform to Object
+  const convertedCurrencyRate = Object.fromEntries(
+    Object.entries(currencyRate).map(([currency, value]) => [
+      currency,
+      (bill / value).toFixed(2),
+    ])
+  );
+
   const HomeContent = loading ? (
     <Loader />
   ) : (
     <div className='row'>
-      <HomeBill bill={bill} currency={currency} />
-      <HomeCurrency currency={currency} />
+      <HomeBill currencyRate={convertedCurrencyRate} />
+      <HomeCurrency currencyRate={currencyRate} />
     </div>
   );
 

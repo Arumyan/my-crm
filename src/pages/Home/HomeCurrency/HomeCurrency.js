@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HomeCurrency = ({ currency }) => {
+const HomeCurrency = ({ currencyRate }) => {
   const date = new Date();
 
   return (
@@ -20,11 +20,11 @@ const HomeCurrency = ({ currency }) => {
             </thead>
 
             <tbody>
-              {Object.keys(currency).map((cur) => {
+              {Object.keys(currencyRate).map((currencyName) => {
                 return (
-                  <tr key={cur}>
-                    <td>{cur}</td>
-                    <td>{currency[cur]}</td>
+                  <tr key={currencyName}>
+                    <td>{currencyName}</td>
+                    <td>{currencyRate[currencyName]}</td>
                     <td>{date.toLocaleString()}</td>
                   </tr>
                 );

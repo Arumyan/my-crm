@@ -4,9 +4,9 @@ export const currencyAPI = {
     const promise = new Promise((resolve, reject) => {
       setTimeout(() => {
         const data = {
-          EUR: 1,
-          USD: 1.12,
-          RUB: 75.45,
+          EUR: 88.47,
+          USD: 74.98,
+          RUB: 1,
         };
         resolve(data);
       }, 2000);
