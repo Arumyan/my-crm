@@ -4,8 +4,7 @@ export const infoAPI = {
   async fetchInfo() {
     const user = firebase.auth().currentUser;
     const uid = user ? user.uid : null;
-    const info = (await firebase.database().ref(`/users/${uid}/info`).once('value')).val()
     
-    return info
+    return (await firebase.database().ref(`/users/${uid}/info`).once('value')).val()
   }
 }
