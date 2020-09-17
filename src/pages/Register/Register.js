@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { NavLink, Redirect } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { authAPI } from '../../api/authAPI';
 import { setAuthActionCreator } from '../../redux/reducers/authReducer';
 
 const Register = () => {
-  const isAuth = useSelector((state) => state.authReducer.isAuth);
+  const history = useHistory();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,17 +32,14 @@ const Register = () => {
     if(formValidate()) {
       setLoading(true);
       authAPI.register(email, password, name).then(() => {
-        dispatch(setAuthActionCreator({isAuth: true}))
         setLoading(false);
+        dispatch(setAuthActionCreator({isAuth: true}))
+        history.push('/')
       }).catch((err) => {
         setLoading(false);
         setError(err.message);
       })
     }
-  }
-
-  if (isAuth) {
-    return <Redirect to='/' />;
   }
 
   return (
