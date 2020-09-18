@@ -1,11 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import M from 'materialize-css';
 
-const CategoryEdit = ({ categories }) => {
+import {useSelector} from 'react-redux';
+
+const CategoryEdit = () => {
+
   const selectEl = useRef(null);
+  const categories = useSelector((state) => state.categoriesReducer.categories);
+
+  console.log(categories)
+
   useEffect(() => {
     M.FormSelect.init(selectEl.current);
-  }, []);
+  }, [categories]);
 
   return (
     <div className='col s12 m6'>

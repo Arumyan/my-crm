@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import M from 'materialize-css'
 import firebase from 'firebase/app';
+import {setCategoriesCreator} from '../../../redux/reducers/categoriesReducer'
+import {useDispatch} from 'react-redux';
 
-const CategoryCreate = () => {
+const CategoryCreate = ({getCategories}) => {
   const [name, setName] = useState('');
   const [limit, setLimit] = useState(1);
   //const [validateError, setValidateError] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     M.updateTextFields()
@@ -21,11 +24,14 @@ const CategoryCreate = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    categoryCreate(name, limit).then((categoryResponse) => {
-      console.log(categoryResponse.key)
+    categoryCreate(name, limit).then(() => {
+      getCategories().then((categories) => {
+        dispatch(setCategoriesCreator(categories))
+      })
     })
     setName('');
-    setLimit(1)
+    setLimit(1);
+    
   }
 
   return (
