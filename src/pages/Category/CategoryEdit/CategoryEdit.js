@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import M from 'materialize-css';
 
-const CategoryEdit = () => {
+const CategoryEdit = ({ categories }) => {
+  const selectEl = useRef(null);
+  useEffect(() => {
+    M.FormSelect.init(selectEl.current);
+  }, []);
+
   return (
     <div className='col s12 m6'>
       <div>
@@ -10,8 +16,14 @@ const CategoryEdit = () => {
 
         <form>
           <div className='input-field'>
-            <select>
-              <option>Category</option>
+            <select ref={selectEl}>
+              {categories.map((category) => {
+                return (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                );
+              })}
             </select>
             <label>Выберите категорию</label>
           </div>

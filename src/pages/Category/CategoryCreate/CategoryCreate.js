@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import M from 'materialize-css'
+import firebase from 'firebase/app';
 
 const CategoryCreate = () => {
   const [name, setName] = useState('');
@@ -10,10 +11,21 @@ const CategoryCreate = () => {
     M.updateTextFields()
   }, [])
 
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
+  const categoryCreate = async (name, limit) => {
+    const user = await firebase.auth().currentUser;
+    const uid = user ? user.uid : null;
+    const category = await firebase.database().ref(`/users/${uid}/categories`).push({name, limit})
 
-    
+    return category
+  }
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    categoryCreate(name, limit).then((categoryResponse) => {
+      console.log(categoryResponse.key)
+    })
+    setName('');
+    setLimit(1)
   }
 
   return (
