@@ -81,6 +81,6 @@ export const routes = [
     exact: false,
     component: Page404,
     layout: MainLayout,
-    authRequire: false
+    authRequire: true
   }
 ]
