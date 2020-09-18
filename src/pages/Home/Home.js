@@ -63,7 +63,7 @@ const Home = () => {
   }
 
   return (
-    <div>
+    <>
       <div className='page-title'>
         <h3>Счет</h3>
 
@@ -76,7 +76,7 @@ const Home = () => {
       </div>
 
       {HomeContent}
-    </div>
+    </>
   );
 };
 

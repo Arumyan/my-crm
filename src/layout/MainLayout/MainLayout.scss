@@ -1,8 +1,18 @@
-.app-main-layout {
+.main-layout {
   position: relative;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  .sidenav {
+    height: calc(100% - 64px);
+    padding-bottom: 0;
+  }
 
   .app-content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
     padding-left: 250px;
     transition: padding 0.3s;
 
@@ -12,6 +22,7 @@
   }
 
   .app-page {
+    flex: 1 1 auto;
     padding: 25px;
 
     .page-title {
