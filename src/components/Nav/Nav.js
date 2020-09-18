@@ -1,21 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Nav.scss';
-import M from 'materialize-css';
-import { withRouter } from 'react-router';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setAuthActionCreator } from '../../redux/reducers/authReducer';
 import { authAPI } from '../../api/authAPI';
 
-const Nav = ({ toggleNav, history, userName }) => {
-  const dropdownTrigger = useRef(null);
+const Nav = ({ toggleNav, userName }) => {
   const [date] = useState(new Date());
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
-    M.Dropdown.init(dropdownTrigger.current);
-
     // const timer = setInterval(() => {
     //   setDate(new Date());
     // }, 1000)
@@ -41,46 +37,32 @@ const Nav = ({ toggleNav, history, userName }) => {
   };
 
   return (
-    <nav className='navbar orange lighten-1'>
-      <div className='nav-wrapper'>
-        <div className='navbar-left'>
-          <span className='navbar-toggle' onClick={toggleNav}>
-            <i className='material-icons black-text'>dehaze</i>
-          </span>
-          <span className='black-text'>{date.toLocaleString()}</span>
-        </div>
+    <nav className="navbar orange lighten-1">
+      <div className="navbar-wrapper">
+        <span className="navbar-toggle" onClick={toggleNav}></span>
+        <span className="navbar-date">{date.toLocaleString()}</span>
 
-        <ul className='right hide-on-small-and-down dropdown-container'>
-          <li>
-            <span
-              className='dropdown-trigger black-text'
-              data-target='dropdown'
-              ref={dropdownTrigger}
-            >
-              {userName ? userName : 'user'}
-              <i className='material-icons right'>arrow_drop_down</i>
-            </span>
-
-            <ul id='dropdown' className='dropdown-content'>
-              <li>
-                <NavLink to='/profile'>
-                  <i className='material-icons black-text'>account_circle</i>
-                  <span className='black-text'>Профиль</span>
+        <div className="navbar-actions">
+          <span className="navbar-dropdown">
+            <span className="dropdown-trigger">{userName ? userName : 'Profile'}</span>
+            <ul className="dropdown-list">
+              <li className="dropdown-list-item">
+                <NavLink className="dropdown-item-action action-profile" to='/profile'>
+                  Профиль
                 </NavLink>
               </li>
-              <li className='divider'></li>
-              <li>
-                <a href='temp' className='dropdown-item' onClick={logout}>
-                  <i className='material-icons black-text'>assignment_return</i>
-                  <span className='black-text'>Выйти</span>
-                </a>
+              <li className="dropdown-list-item">
+                <span className="dropdown-item-action action-settings">Настройки</span>
+              </li>
+              <li className="dropdown-list-item">
+                <span className="dropdown-item-action action-exit" onClick={logout}>Выйти</span>
               </li>
             </ul>
-          </li>
-        </ul>
+          </span>
+        </div>
       </div>
     </nav>
-  );
+  )
 };
 
-export default withRouter(Nav);
+export default Nav;

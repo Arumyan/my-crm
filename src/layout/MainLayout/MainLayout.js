@@ -19,7 +19,7 @@ const MainLayout = (props) => {
   let appContentClasses = isOpen ? '' : ' full';
 
   return (
-    <div className="app-main-layout">
+    <div className="main-layout">
       <Nav toggleNav={toggleNav} userName={info.name}/>
       <Sidebar isOpen={isOpen}/>
 
