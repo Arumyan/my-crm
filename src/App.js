@@ -56,6 +56,7 @@ const App = () => {
               path={route.path}
               exact={route.exact}
               layout={route.layout}
+              authRequire={route.authRequire}
               component={route.component}
             />
           );

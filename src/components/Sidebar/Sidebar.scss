@@ -1,5 +1,5 @@
 .app-sidenav {
-  top: 64px;
+  top: calc(64px + 2px);
   width: 250px;
   transition: transform 0.3s;
 
