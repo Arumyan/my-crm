@@ -32,12 +32,10 @@ const Category = () => {
       <section>
         <div className='row'>
           <CategoryCreate updateCategories={updateCategories} />
-          {categories.length && (
-            <CategoryEdit
+          <CategoryEdit
               categories={categories}
               updateCategories={updateCategories}
             />
-          )}
         </div>
       </section>
     </>

@@ -10,6 +10,8 @@ const CategoryEdit = ({ categories, updateCategories }) => {
     limit: 1,
   });
 
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     M.FormSelect.init(selectEl.current);
 
@@ -26,6 +28,14 @@ const CategoryEdit = ({ categories, updateCategories }) => {
     M.updateTextFields();
   }, [currentCategory]);
 
+  const formValidate = () => {
+    if(currentCategory.name === '' || currentCategory.limit === '') {
+      setError('Поля не должны быть пустыми')
+      return false
+    }
+    return true
+  }
+
   const onChangeSelect = (e) => {
     const currentCategory = categories.find((category) => {
       return category.id === e.target.value;
@@ -36,12 +46,15 @@ const CategoryEdit = ({ categories, updateCategories }) => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
+    setError(null)
 
-    const {id, name, limit} = currentCategory;
+    if(formValidate()) {
+      const {id, name, limit} = currentCategory;
 
-    categoryAPI.editCategory(id, name, limit).then(() => {
-      updateCategories();
-    });
+      categoryAPI.editCategory(id, name, limit).then(() => {
+        updateCategories();
+      });
+    }
   };
 
   return (
@@ -96,6 +109,8 @@ const CategoryEdit = ({ categories, updateCategories }) => {
             Обновить
             <i className='material-icons right'>send</i>
           </button>
+
+            { error && <div className="red-text text-darken-2">{error}</div>}
         </form>
       </div>
     </div>
