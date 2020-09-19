@@ -27,6 +27,12 @@ const Category = () => {
     return categoriesArr
   }
 
+  const updateCategory = () => {
+    getCategories().then((categories) => {
+      dispatch(setCategoriesCreator(categories))
+    })
+  }
+
   useEffect(() => {
     getCategories().then((categories) => {
       dispatch(setCategoriesCreator(categories))
@@ -43,7 +49,7 @@ const Category = () => {
         <div className='row'>
           <CategoryCreate getCategories={getCategories}/>
           {
-            categories.length && <CategoryEdit categories={categories} getCategories={getCategories}/>
+            categories.length && <CategoryEdit categories={categories} updateCategory={updateCategory}/>
           }
           
         </div>

@@ -2,33 +2,31 @@ import React, { useState, useEffect, useRef } from 'react';
 import M from 'materialize-css';
 import firebase from 'firebase/app';
 
-const CategoryEdit = ({ categories, getCategories }) => {
+const CategoryEdit = ({ categories, updateCategory }) => {
   const selectEl = useRef(null);
-  const [newName, setNewName] = useState('');
-  const [newLimit, setNewLimit] = useState(1);
 
-  const [currentCategory, setCurrentCategory] = useState({});
+  const [currentCategory, setCurrentCategory] = useState({
+    name: '',
+    limit: 1
+  });
 
   useEffect(() => {
     M.FormSelect.init(selectEl.current);
 
     if (categories.length) {
-      setNewName(categories[0].name);
       setCurrentCategory(categories[0]);
     }
   }, [categories]);
 
   useEffect(() => {
     M.updateTextFields();
-  }, [newName, newLimit]);
+  }, [currentCategory]);
 
   const onChangeSelect = (e) => {
     const currentCategory = categories.find((category) => {
       return category.id === e.target.value;
     });
 
-    setNewName(currentCategory.name);
-    setNewLimit(currentCategory.limit);
     setCurrentCategory(currentCategory);
   };
 
@@ -41,9 +39,9 @@ const CategoryEdit = ({ categories, getCategories }) => {
       .database()
       .ref(`/users/${uid}/categories`)
       .child(currentCategory.id)
-      .update({ name: newName, limit: newLimit });
+      .update({ name: currentCategory.name, limit: currentCategory.limit });
     
-      getCategories();
+      updateCategory();
   };
 
   return (
@@ -71,8 +69,8 @@ const CategoryEdit = ({ categories, getCategories }) => {
             <input
               type='text'
               id='name'
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
+              value={currentCategory.name}
+              onChange={(e) => setCurrentCategory({...currentCategory, name: e.target.value})}
             />
             <label htmlFor='name'>Название</label>
           </div>
@@ -81,8 +79,8 @@ const CategoryEdit = ({ categories, getCategories }) => {
             <input
               id='limit'
               type='number'
-              value={newLimit}
-              onChange={(e) => setNewLimit(e.target.value)}
+              value={currentCategory.limit}
+              onChange={(e) => setCurrentCategory({...currentCategory, limit: e.target.value})}
             />
             <label htmlFor='limit'>Лимит</label>
           </div>
