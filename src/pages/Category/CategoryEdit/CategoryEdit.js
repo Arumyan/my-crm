@@ -1,19 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import M from 'materialize-css';
 
-import { useSelector } from 'react-redux';
+//import { useSelector } from 'react-redux';
 
-const CategoryEdit = () => {
+const CategoryEdit = ({categories}) => {
   const selectEl = useRef(null);
-  const categories = useSelector((state) => state.categoriesReducer.categories);
+  //const categories = useSelector((state) => state.categoriesReducer.categories);
 
-  const [currentCategory, setCurrentCategory] = useState(null);
+  //const [currentCategory, setCurrentCategory] = useState(null);
+  const [newName, setNewName] = useState('');
+  const [newLimit, setNewLimit] = useState(1);
 
   useEffect(() => {
     M.FormSelect.init(selectEl.current)
+    
+    if(categories.length) {
+      setNewName(categories[0].name)
+    }
+  }, [categories]);
+
+  useEffect(() => {
     M.updateTextFields()
-    setCurrentCategory(categories[0])
-  }, [categories, currentCategory]);
+  }, [newName, newLimit])
+
+  const onChangeSelect = (e) => {
+    const currentCategory = categories.find((category) => {
+      return category.id === e.target.value
+    })
+
+    setNewName(currentCategory.name)
+    setNewLimit(currentCategory.limit)
+  }
   
   return (
     <div className='col s12 m6'>
@@ -24,7 +41,7 @@ const CategoryEdit = () => {
 
         <form>
           <div className='input-field'>
-            <select ref={selectEl} onChange={(e) => console.log(e.target.value)}>
+            <select ref={selectEl} onChange={ onChangeSelect }>
               {categories.map((category) => {
                 return (
                   <option key={category.id} value={category.id} >
@@ -40,8 +57,8 @@ const CategoryEdit = () => {
             <input
               type='text'
               id='name'
-              value={currentCategory ? currentCategory.name : ''}
-              onChange={(e) => console.log(e.target.value)}
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
             />
             <label htmlFor='name'>Название</label>
           </div>
@@ -50,8 +67,8 @@ const CategoryEdit = () => {
             <input
               id='limit'
               type='number'
-              value={currentCategory ? currentCategory.limit : ''}
-              onChange={(e) => console.log(e.target.value)}
+              value={newLimit}
+              onChange={(e) => setNewLimit(e.target.value)}
             />
             <label htmlFor='limit'>Лимит</label>
           </div>

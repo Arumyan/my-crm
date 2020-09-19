@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import './Category.scss'
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import CategoryCreate from './CategoryCreate/CategoryCreate'
 import CategoryEdit from './CategoryEdit/CategoryEdit'
 import firebase from 'firebase/app';
@@ -8,12 +8,13 @@ import {setCategoriesCreator} from '../../redux/reducers/categoriesReducer'
 
 const Category = () => {
   const dispatch = useDispatch();
+  const categories = useSelector((state) => state.categoriesReducer.categories);
   
   const getCategories = async() => {
     const user = await firebase.auth().currentUser;
     const uid = user ? user.uid : null;
     const categories = (await firebase.database().ref(`/users/${uid}/categories`).once('value')).val() || {}
-
+    
     const categoriesArr = [];
     Object.keys(categories).forEach(key => {
       categoriesArr.push({
@@ -41,7 +42,10 @@ const Category = () => {
       <section>
         <div className='row'>
           <CategoryCreate getCategories={getCategories}/>
-          <CategoryEdit />
+          {
+            categories.length && <CategoryEdit categories={categories}/>
+          }
+          
         </div>
       </section>
     </>
