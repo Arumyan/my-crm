@@ -1,6 +1,13 @@
 import firebase from 'firebase/app';
 
 export const authAPI = {
+
+  getUserID() {
+    const user = firebase.auth().currentUser;
+    const uid = user ? user.uid : null;
+
+    return uid
+  },
   login(email, password) {
     return firebase.auth().signInWithEmailAndPassword(email, password);
   },
@@ -14,9 +21,7 @@ export const authAPI = {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
-        const user = firebase.auth().currentUser;
-        const uid = user ? user.uid : null;
-        return uid;
+        return this.getUserID();
       })
       .then((uid) => {
         return firebase.database().ref(`/users/${uid}/info`).set({

@@ -32,7 +32,6 @@ const Home = () => {
       })
       .catch((e) => {
         setLoading(false);
-        console.log(e);
       });
 
     return () => (cleanupFunction = true);

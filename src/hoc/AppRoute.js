@@ -1,8 +1,15 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { Route, useHistory } from 'react-router-dom';
 
-import { Route } from 'react-router-dom';
+const AppRoute = ({ layout: Layout, authRequire, ...rest }) => {
+  const isAuth = useSelector((state) => state.authReducer.isAuth)
+  const history = useHistory();
 
-const AppRoute = ({ layout: Layout, ...rest }) => {
+  if(authRequire && !isAuth) {
+    history.push('/login')
+  }
+
   return (
     <Layout>
       <Route {...rest}></Route>

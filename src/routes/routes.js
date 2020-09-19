@@ -17,60 +17,70 @@ export const routes = [
     path: '/',
     exact: true,
     component: Home,
-    layout: MainLayout
+    layout: MainLayout,
+    authRequire: true
   },
   {
     path: '/category',
     exact: true,
     component: Category,
-    layout: MainLayout
+    layout: MainLayout,
+    authRequire: true
   },
   {
     path: '/details',
     exact: true,
     component: Details,
-    layout: MainLayout
+    layout: MainLayout,
+    authRequire: true
   },
   {
     path: '/history',
     exact: true,
     component: History,
-    layout: MainLayout
+    layout: MainLayout,
+    authRequire: true
   },
   {
     path: '/new-item',
     exact: true,
     component: NewItem,
-    layout: MainLayout
+    layout: MainLayout,
+    authRequire: true
   },
   {
     path: '/planning',
     exact: true,
     component: Planning,
-    layout: MainLayout
+    layout: MainLayout,
+    authRequire: true
   },
   {
     path: '/profile',
     exact: true,
     component: Profile,
-    layout: MainLayout
+    layout: MainLayout,
+    authRequire: true
   },
   {
     path: '/login',
     exact: true,
     component: Login,
-    layout: EmptyLayout
+    layout: EmptyLayout,
+    authRequire: false
   },
   {
     path: '/register',
     exact: true,
     component: Register,
-    layout: EmptyLayout
+    layout: EmptyLayout,
+    authRequire: false
   },
   {
     path: '*',
     exact: false,
     component: Page404,
-    layout: MainLayout
+    layout: MainLayout,
+    authRequire: true
   }
 ]
