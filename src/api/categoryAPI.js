@@ -24,4 +24,14 @@ export const categoryAPI = {
       id: key,
     }));
   },
+
+  async editCategory(id, name, limit) {
+    const uid = authAPI.getUserID();
+
+    return await firebase
+      .database()
+      .ref(`/users/${uid}/categories`)
+      .child(id)
+      .update({ name, limit });
+  },
 };

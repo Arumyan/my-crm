@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import './Category.scss';
+
 import { useDispatch, useSelector } from 'react-redux';
-import CategoryCreate from './CategoryCreate/CategoryCreate';
-import CategoryEdit from './CategoryEdit/CategoryEdit';
 import { setCategoriesCreator } from '../../redux/reducers/categoriesReducer';
 import { categoryAPI } from '../../api/categoryAPI';
+
+import CategoryCreate from './CategoryCreate/CategoryCreate';
+import CategoryEdit from './CategoryEdit/CategoryEdit';
 
 const Category = () => {
   const dispatch = useDispatch();

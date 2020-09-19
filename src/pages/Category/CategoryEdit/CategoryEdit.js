@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import M from 'materialize-css';
-import firebase from 'firebase/app';
+import { categoryAPI } from '../../../api/categoryAPI';
 
 const CategoryEdit = ({ categories, updateCategories }) => {
   const selectEl = useRef(null);
@@ -37,15 +37,11 @@ const CategoryEdit = ({ categories, updateCategories }) => {
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
-    const user = await firebase.auth().currentUser;
-    const uid = user ? user.uid : null;
-    await firebase
-      .database()
-      .ref(`/users/${uid}/categories`)
-      .child(currentCategory.id)
-      .update({ name: currentCategory.name, limit: currentCategory.limit });
+    const {id, name, limit} = currentCategory;
 
+    categoryAPI.editCategory(id, name, limit).then(() => {
       updateCategories();
+    });
   };
 
   return (
