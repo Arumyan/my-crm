@@ -34,7 +34,7 @@ const CategoryEdit = ({ categories, updateCategories }) => {
     setCurrentCategory(currentCategory);
   };
 
-  const onSubmitHandler = async (e) => {
+  const onSubmitHandler = (e) => {
     e.preventDefault();
 
     const {id, name, limit} = currentCategory;

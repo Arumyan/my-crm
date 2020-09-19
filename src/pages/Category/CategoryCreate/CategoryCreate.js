@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import M from 'materialize-css';
-import firebase from 'firebase/app';
+import { categoryAPI } from '../../../api/categoryAPI';
 
 const CategoryCreate = ({ updateCategories }) => {
   const [name, setName] = useState('');
@@ -10,20 +10,10 @@ const CategoryCreate = ({ updateCategories }) => {
     M.updateTextFields();
   }, []);
 
-  const categoryCreate = async (name, limit) => {
-    const user = await firebase.auth().currentUser;
-    const uid = user ? user.uid : null;
-    const category = await firebase
-      .database()
-      .ref(`/users/${uid}/categories`)
-      .push({ name, limit });
-
-    return category;
-  };
-
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    categoryCreate(name, limit).then(() => {
+
+    categoryAPI.createCategory(name, limit).then(() => {
       updateCategories();
       setName('');
       setLimit(1);
@@ -66,7 +56,6 @@ const CategoryCreate = ({ updateCategories }) => {
           <i className='material-icons right'>send</i>
         </button>
       </form>
-      {/* {validateError && (<div className='form-error'>{validateError}</div>)} */}
     </div>
   );
 };

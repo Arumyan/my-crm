@@ -25,6 +25,15 @@ export const categoryAPI = {
     }));
   },
 
+  async createCategory(name, limit) {
+    const uid = authAPI.getUserID();
+
+    return await firebase
+      .database()
+      .ref(`/users/${uid}/categories`)
+      .push({ name, limit });
+  },
+
   async editCategory(id, name, limit) {
     const uid = authAPI.getUserID();
 
