@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import M from 'materialize-css';
 import firebase from 'firebase/app';
 
-const CategoryEdit = ({ categories, updateCategory }) => {
+const CategoryEdit = ({ categories, updateCategories }) => {
   const selectEl = useRef(null);
 
   const [currentCategory, setCurrentCategory] = useState({
@@ -45,7 +45,7 @@ const CategoryEdit = ({ categories, updateCategory }) => {
       .child(currentCategory.id)
       .update({ name: currentCategory.name, limit: currentCategory.limit });
 
-    updateCategory();
+      updateCategories();
   };
 
   return (

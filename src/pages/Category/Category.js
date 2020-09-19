@@ -1,42 +1,25 @@
-import React, {useEffect} from 'react';
-import './Category.scss'
-import {useDispatch, useSelector} from 'react-redux';
-import CategoryCreate from './CategoryCreate/CategoryCreate'
-import CategoryEdit from './CategoryEdit/CategoryEdit'
-import firebase from 'firebase/app';
-import {setCategoriesCreator} from '../../redux/reducers/categoriesReducer'
+import React, { useEffect } from 'react';
+import './Category.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import CategoryCreate from './CategoryCreate/CategoryCreate';
+import CategoryEdit from './CategoryEdit/CategoryEdit';
+import { setCategoriesCreator } from '../../redux/reducers/categoriesReducer';
+import { categoryAPI } from '../../api/categoryAPI';
 
 const Category = () => {
   const dispatch = useDispatch();
   const categories = useSelector((state) => state.categoriesReducer.categories);
-  
-  const getCategories = async() => {
-    const user = await firebase.auth().currentUser;
-    const uid = user ? user.uid : null;
-    const categories = (await firebase.database().ref(`/users/${uid}/categories`).once('value')).val() || {}
-    
-    // Object.keys(categories).forEach(key => {
-    //   categoriesArr.push({
-    //     name: categories[key].name,
-    //     limit: categories[key].limit,
-    //     id: key,
-    //   })
-    // })
 
-    return Object.keys(categories).map(key => ({...categories[key], id: key}))
-  }
-
-  const updateCategory = () => {
-    getCategories().then((categories) => {
-      dispatch(setCategoriesCreator(categories))
-    })
-  }
+  const updateCategories = () => {
+    categoryAPI.getCategories().then((categories) => {
+      dispatch(setCategoriesCreator(categories));
+    });
+  };
 
   useEffect(() => {
-    getCategories().then((categories) => {
-      dispatch(setCategoriesCreator(categories))
-    })
-  }, [dispatch])
+    updateCategories();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
@@ -46,11 +29,13 @@ const Category = () => {
 
       <section>
         <div className='row'>
-          <CategoryCreate getCategories={getCategories}/>
-          {
-            categories.length && <CategoryEdit categories={categories} updateCategory={updateCategory}/>
-          }
-          
+          <CategoryCreate updateCategories={updateCategories} />
+          {categories.length && (
+            <CategoryEdit
+              categories={categories}
+              updateCategories={updateCategories}
+            />
+          )}
         </div>
       </section>
     </>

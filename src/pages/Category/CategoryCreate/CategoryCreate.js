@@ -1,38 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import M from 'materialize-css'
+import M from 'materialize-css';
 import firebase from 'firebase/app';
-import {setCategoriesCreator} from '../../../redux/reducers/categoriesReducer'
-import {useDispatch} from 'react-redux';
 
-const CategoryCreate = ({getCategories}) => {
+const CategoryCreate = ({ updateCategories }) => {
   const [name, setName] = useState('');
   const [limit, setLimit] = useState(1);
-  //const [validateError, setValidateError] = useState(null);
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    M.updateTextFields()
-  }, [])
+    M.updateTextFields();
+  }, []);
 
   const categoryCreate = async (name, limit) => {
     const user = await firebase.auth().currentUser;
     const uid = user ? user.uid : null;
-    const category = await firebase.database().ref(`/users/${uid}/categories`).push({name, limit})
+    const category = await firebase
+      .database()
+      .ref(`/users/${uid}/categories`)
+      .push({ name, limit });
 
-    return category
-  }
+    return category;
+  };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     categoryCreate(name, limit).then(() => {
-      getCategories().then((categories) => {
-        dispatch(setCategoriesCreator(categories))
-      })
-    })
-    setName('');
-    setLimit(1);
-    
-  }
+      updateCategories();
+      setName('');
+      setLimit(1);
+    });
+  };
 
   return (
     <div className='col s12 m6'>
