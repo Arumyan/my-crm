@@ -5,19 +5,31 @@ import { categoryAPI } from '../../../api/categoryAPI';
 const CategoryCreate = ({ updateCategories }) => {
   const [name, setName] = useState('');
   const [limit, setLimit] = useState(1);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     M.updateTextFields();
   }, []);
 
+  const formValidate = () => {
+    if(name === '' || limit === '') {
+      setError('Поля не должны быть пустыми')
+      return false
+    }
+    return true
+  }
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    setError(null)
 
-    categoryAPI.createCategory(name, limit).then(() => {
-      updateCategories();
-      setName('');
-      setLimit(1);
-    });
+    if(formValidate()) {
+      categoryAPI.createCategory(name, limit).then(() => {
+        updateCategories();
+        setName('');
+        setLimit(1);
+      });
+    }
   };
 
   return (
@@ -55,6 +67,8 @@ const CategoryCreate = ({ updateCategories }) => {
           Создать
           <i className='material-icons right'>send</i>
         </button>
+
+        { error && <div className="red-text text-darken-2">{error}</div>}
       </form>
     </div>
   );
