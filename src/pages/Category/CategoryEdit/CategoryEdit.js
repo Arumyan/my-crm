@@ -7,7 +7,7 @@ const CategoryEdit = ({ categories, updateCategory }) => {
 
   const [currentCategory, setCurrentCategory] = useState({
     name: '',
-    limit: 1
+    limit: 1,
   });
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const CategoryEdit = ({ categories, updateCategory }) => {
       const currentCategory = categories.find((category) => {
         return category.id === selectEl.current.value;
       });
-  
+
       setCurrentCategory(currentCategory);
     }
   }, [categories]);
@@ -44,8 +44,8 @@ const CategoryEdit = ({ categories, updateCategory }) => {
       .ref(`/users/${uid}/categories`)
       .child(currentCategory.id)
       .update({ name: currentCategory.name, limit: currentCategory.limit });
-    
-      updateCategory();
+
+    updateCategory();
   };
 
   return (
@@ -74,7 +74,9 @@ const CategoryEdit = ({ categories, updateCategory }) => {
               type='text'
               id='name'
               value={currentCategory.name}
-              onChange={(e) => setCurrentCategory({...currentCategory, name: e.target.value})}
+              onChange={(e) =>
+                setCurrentCategory({ ...currentCategory, name: e.target.value })
+              }
             />
             <label htmlFor='name'>Название</label>
           </div>
@@ -84,7 +86,12 @@ const CategoryEdit = ({ categories, updateCategory }) => {
               id='limit'
               type='number'
               value={currentCategory.limit}
-              onChange={(e) => setCurrentCategory({...currentCategory, limit: e.target.value})}
+              onChange={(e) =>
+                setCurrentCategory({
+                  ...currentCategory,
+                  limit: e.target.value,
+                })
+              }
             />
             <label htmlFor='limit'>Лимит</label>
           </div>

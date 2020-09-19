@@ -15,16 +15,15 @@ const Category = () => {
     const uid = user ? user.uid : null;
     const categories = (await firebase.database().ref(`/users/${uid}/categories`).once('value')).val() || {}
     
-    const categoriesArr = [];
-    Object.keys(categories).forEach(key => {
-      categoriesArr.push({
-        name: categories[key].name,
-        limit: categories[key].limit,
-        id: key,
-      })
-    })
-    //return Object.keys(categories).map(key => ({...categories[key], id: key}))
-    return categoriesArr
+    // Object.keys(categories).forEach(key => {
+    //   categoriesArr.push({
+    //     name: categories[key].name,
+    //     limit: categories[key].limit,
+    //     id: key,
+    //   })
+    // })
+
+    return Object.keys(categories).map(key => ({...categories[key], id: key}))
   }
 
   const updateCategory = () => {
