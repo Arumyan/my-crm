@@ -14,7 +14,11 @@ const CategoryEdit = ({ categories, updateCategory }) => {
     M.FormSelect.init(selectEl.current);
 
     if (categories.length) {
-      setCurrentCategory(categories[0]);
+      const currentCategory = categories.find((category) => {
+        return category.id === selectEl.current.value;
+      });
+  
+      setCurrentCategory(currentCategory);
     }
   }, [categories]);
 
