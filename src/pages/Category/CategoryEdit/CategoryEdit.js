@@ -1,21 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import M from 'materialize-css';
-
-//import { useSelector } from 'react-redux';
+import firebase from 'firebase/app';
 
 const CategoryEdit = ({categories}) => {
   const selectEl = useRef(null);
-  //const categories = useSelector((state) => state.categoriesReducer.categories);
-
-  //const [currentCategory, setCurrentCategory] = useState(null);
   const [newName, setNewName] = useState('');
   const [newLimit, setNewLimit] = useState(1);
+
+  let currentCategory = {};
 
   useEffect(() => {
     M.FormSelect.init(selectEl.current)
     
     if(categories.length) {
       setNewName(categories[0].name)
+      //currentCategory = categories[0]
     }
   }, [categories]);
 
@@ -24,12 +23,22 @@ const CategoryEdit = ({categories}) => {
   }, [newName, newLimit])
 
   const onChangeSelect = (e) => {
-    const currentCategory = categories.find((category) => {
+    currentCategory = categories.find((category) => {
       return category.id === e.target.value
     })
 
     setNewName(currentCategory.name)
     setNewLimit(currentCategory.limit)
+  }
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    const [id, name, limit] = currentCategory
+
+    const user = await firebase.auth().currentUser;
+    const uid = user ? user.uid : null;
+    await firebase.database().ref(`/users/${uid}/categories`).child(id).update({name, limit})
   }
   
   return (
@@ -39,7 +48,7 @@ const CategoryEdit = ({categories}) => {
           <h4>Редактировать</h4>
         </div>
 
-        <form>
+        <form onSubmit={onSubmitHandler}>
           <div className='input-field'>
             <select ref={selectEl} onChange={ onChangeSelect }>
               {categories.map((category) => {
