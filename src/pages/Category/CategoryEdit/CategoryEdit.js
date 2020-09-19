@@ -2,45 +2,50 @@ import React, { useState, useEffect, useRef } from 'react';
 import M from 'materialize-css';
 import firebase from 'firebase/app';
 
-const CategoryEdit = ({categories}) => {
+const CategoryEdit = ({ categories, getCategories }) => {
   const selectEl = useRef(null);
   const [newName, setNewName] = useState('');
   const [newLimit, setNewLimit] = useState(1);
 
-  let currentCategory = {};
+  const [currentCategory, setCurrentCategory] = useState({});
 
   useEffect(() => {
-    M.FormSelect.init(selectEl.current)
-    
-    if(categories.length) {
-      setNewName(categories[0].name)
-      //currentCategory = categories[0]
+    M.FormSelect.init(selectEl.current);
+
+    if (categories.length) {
+      setNewName(categories[0].name);
+      setCurrentCategory(categories[0]);
     }
   }, [categories]);
 
   useEffect(() => {
-    M.updateTextFields()
-  }, [newName, newLimit])
+    M.updateTextFields();
+  }, [newName, newLimit]);
 
   const onChangeSelect = (e) => {
-    currentCategory = categories.find((category) => {
-      return category.id === e.target.value
-    })
+    const currentCategory = categories.find((category) => {
+      return category.id === e.target.value;
+    });
 
-    setNewName(currentCategory.name)
-    setNewLimit(currentCategory.limit)
-  }
+    setNewName(currentCategory.name);
+    setNewLimit(currentCategory.limit);
+    setCurrentCategory(currentCategory);
+  };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
-    const [id, name, limit] = currentCategory
-
     const user = await firebase.auth().currentUser;
     const uid = user ? user.uid : null;
-    await firebase.database().ref(`/users/${uid}/categories`).child(id).update({name, limit})
-  }
-  
+    await firebase
+      .database()
+      .ref(`/users/${uid}/categories`)
+      .child(currentCategory.id)
+      .update({ name: newName, limit: newLimit });
+    
+      getCategories();
+  };
+
   return (
     <div className='col s12 m6'>
       <div>
@@ -50,10 +55,10 @@ const CategoryEdit = ({categories}) => {
 
         <form onSubmit={onSubmitHandler}>
           <div className='input-field'>
-            <select ref={selectEl} onChange={ onChangeSelect }>
+            <select ref={selectEl} onChange={onChangeSelect}>
               {categories.map((category) => {
                 return (
-                  <option key={category.id} value={category.id} >
+                  <option key={category.id} value={category.id}>
                     {category.name}
                   </option>
                 );

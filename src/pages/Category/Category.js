@@ -43,7 +43,7 @@ const Category = () => {
         <div className='row'>
           <CategoryCreate getCategories={getCategories}/>
           {
-            categories.length && <CategoryEdit categories={categories}/>
+            categories.length && <CategoryEdit categories={categories} getCategories={getCategories}/>
           }
           
         </div>
