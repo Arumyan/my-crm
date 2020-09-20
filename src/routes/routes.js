@@ -28,7 +28,7 @@ export const routes = [
     authRequire: true
   },
   {
-    path: '/details',
+    path: '/details/:id',
     exact: true,
     component: Details,
     layout: MainLayout,

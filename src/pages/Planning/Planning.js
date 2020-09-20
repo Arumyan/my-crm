@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Planning.scss';
 import { itemAPI } from '../../api/itemAPI';
+import { categoryAPI } from '../../api/categoryAPI';
 import Loader from '../../components/Loader/Loader';
 import { useSelector } from 'react-redux';
 
@@ -8,34 +9,41 @@ const Planning = () => {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState(null);
   const bill = useSelector((state) => state.infoReducer.info.bill);
-  const categories = useSelector((state) => state.categoriesReducer.categories);
 
   useEffect(() => {
-    itemAPI.getItems().then((items) => {
-      const transformedData = categories.map((category) => {
-        const spend = items
-          .filter((item) => item.categoryId === category.id)
-          .filter((item) => item.type === 'outcome')
-          .reduce((total, item) => {
-            return (total += +item.amount);
-          }, 0);
 
-        const percent = (100 * spend) / category.limit;
-        const progressPercent = percent > 100 ? 100 : percent;
-        const progressColor =
-          percent < 60 ? 'green' : percent < 100 ? 'yellow' : 'red';
+    async function loadData() {
+      const categories = await categoryAPI.getCategories();
 
-        return {
-          ...category,
-          progressPercent,
-          progressColor,
-          spend,
-        };
+      await itemAPI.getItems().then((items) => {
+        const transformedData = categories.map((category) => {
+          const spend = items
+            .filter((item) => item.categoryId === category.id)
+            .filter((item) => item.type === 'outcome')
+            .reduce((total, item) => {
+              return (total += +item.amount);
+            }, 0);
+  
+          const percent = (100 * spend) / category.limit;
+          const progressPercent = percent > 100 ? 100 : percent;
+          const progressColor =
+            percent < 60 ? 'green' : percent < 100 ? 'yellow' : 'red';
+  
+          return {
+            ...category,
+            progressPercent,
+            progressColor,
+            spend,
+          };
+        });
+        
+        setItems(transformedData);
+        setLoading(false);
       });
-      setItems(transformedData);
-      setLoading(false);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
+
+    loadData()
+
   }, []);
 
   if (loading) {
@@ -50,9 +58,6 @@ const Planning = () => {
       </div>
 
       <section>
-        {console.log(categories)}
-        {console.log(items)}
-
         {items.map((item) => {
           return (
             <div key={item.id}>
