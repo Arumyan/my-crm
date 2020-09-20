@@ -50,7 +50,7 @@ const NewItem = () => {
         amount: amount,
         descr: descr,
         type: type,
-        date: new Date(),
+        date: (new Date()).toLocaleString(),
       };
 
       itemAPI.createNewItem(itemData);
