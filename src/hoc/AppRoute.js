@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Route, useHistory } from 'react-router-dom';
 
 const AppRoute = ({ layout: Layout, authRequire, ...rest }) => {
-  const isAuth = useSelector((state) => state.authReducer.isAuth)
+  const isAuth = useSelector((state) => state.authReducer)
   const history = useHistory();
 
   if(authRequire && !isAuth) {

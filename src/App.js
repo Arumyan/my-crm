@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import { infoAPI } from './api/infoAPI';
 import { setInfoAction } from './redux/reducers/infoReducer';
-import { setAuthActionCreator } from './redux/reducers/authReducer';
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux';
 import Loader from './components/Loader/Loader'
@@ -24,7 +23,6 @@ const App = () => {
           .fetchInfo()
           .then((data) => {
             dispatch(setInfoAction(data));
-            dispatch(setAuthActionCreator({ isAuth: true }));
             setInitialize(true)
           })
           .catch((e) => {
@@ -33,7 +31,6 @@ const App = () => {
           });
       } else {
         setInitialize(true)
-        dispatch(setAuthActionCreator({ isAuth: false }));
       }
     });
   });

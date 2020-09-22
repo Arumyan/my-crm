@@ -1,46 +1,33 @@
 import React, { useState } from 'react';
-import './Login.scss'
+import './Login.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
-import { authAPI } from '../../api/authAPI';
-//import Loader from '../../components/Loader/Loader';
 import { loginThunk } from '../../redux/reducers/authReducer';
 
 const Login = () => {
-  const isAuth = useSelector((state) => state.authReducer.isAuth)
+  const isAuth = useSelector((state) => state.authReducer.isAuth);
+  const isLoading = useSelector((state) => state.authReducer.isLoading);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
   const formValidate = () => {
-    if(email === '' || password === '') {
-      setError('Поля не должен быть пустыми')
-      return false
+    if (email === '' || password === '') {
+      setError('Поля не должен быть пустыми');
+      return false;
     }
 
-    return true
-  }
+    return true;
+  };
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    //setError(null);
 
-    if(formValidate()) {
-      // setLoading(true);
-      // authAPI.login(email, password).then(() => {
-      //   setLoading(false);
-      //   dispatch(setAuthActionCreator({ isAuth: true }));
-      // })
-      // .catch((err) => {
-      //   setLoading(false);
-      //   setError(err.message);
-      // })
-      dispatch(loginThunk(email, password)).catch((e) => {
-        console.log('Произошла ошибка' + e)
-      })
+    if (formValidate()) {
+      dispatch(loginThunk(email, password))
     }
   };
 
@@ -78,20 +65,18 @@ const Login = () => {
           />
           <label htmlFor='password'>Пароль</label>
         </div>
-        
-        {
-          error && (<span className='form-message red-text text-lighten-1'>{error}</span>)
-        }
-        
 
+        {error && (
+          <span className='form-message red-text text-lighten-1'>{error}</span>
+        )}
       </div>
 
       <div className='card-action'>
         <div>
-          <button 
+          <button
             className='btn waves-effect waves-light auth-submit'
             type='submit'
-            disabled={loading}
+            disabled={isLoading}
           >
             Войти
             <i className='material-icons right'>send</i>
