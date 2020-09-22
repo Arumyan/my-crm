@@ -9,7 +9,8 @@ import { infoAPI } from './api/infoAPI';
 import { setInfoAction } from './redux/reducers/infoReducer';
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux';
-import Loader from './components/Loader/Loader'
+import Loader from './components/Loader/Loader';
+import {setAuthActionCreator} from './redux/reducers/authReducer'
 
 const App = () => {
   const [isInitialize, setInitialize] = useState(false);
@@ -23,6 +24,7 @@ const App = () => {
           .fetchInfo()
           .then((data) => {
             dispatch(setInfoAction(data));
+            dispatch(setAuthActionCreator({isAuth: true}))
             setInitialize(true)
           })
           .catch((e) => {

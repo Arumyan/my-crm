@@ -23,8 +23,7 @@ const Nav = ({ toggleNav, userName }) => {
 
   const logout = (e) => {
     e.preventDefault();
-
-    dispatch(logoutThunk(false));
+    dispatch(logoutThunk());
     history.push('/login?message=logout');
   };
 

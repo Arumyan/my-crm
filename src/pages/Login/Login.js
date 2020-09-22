@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
 import './Login.scss';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
-import { loginThunk } from '../../redux/reducers/authReducer';
+import { loginThunk, setAuthActionCreator } from '../../redux/reducers/authReducer';
 
 const Login = () => {
-  const isAuth = useSelector((state) => state.authReducer.isAuth);
-  const isLoading = useSelector((state) => state.authReducer.isLoading);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  const {isAuth, isLoading, error} = useSelector((state) => state.authReducer)
+  const [form, setForm] = useState({
+    email: '',
+    password: ''
+  })
 
   const dispatch = useDispatch();
 
+  const formChangeHandler = (e) => {
+    setForm({...form, [e.target.name]: e.target.value})
+  }
+
   const formValidate = () => {
-    if (email === '' || password === '') {
-      setError('Поля не должен быть пустыми');
+    dispatch(setAuthActionCreator({error: null}))
+    if (form.email === '' || form.password === '') {
+      dispatch(setAuthActionCreator({error: 'Поля не должен быть пустыми'}))
       return false;
     }
 
@@ -27,7 +33,7 @@ const Login = () => {
     e.preventDefault();
 
     if (formValidate()) {
-      dispatch(loginThunk(email, password))
+      dispatch(loginThunk(form.email, form.password))
     }
   };
 
@@ -44,11 +50,10 @@ const Login = () => {
           <input
             id='email'
             type='text'
-            value={email}
+            value={form.email}
+            name='email'
             className='validate'
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={formChangeHandler}
           />
           <label htmlFor='email'>Email</label>
         </div>
@@ -57,11 +62,10 @@ const Login = () => {
           <input
             id='password'
             type='password'
-            value={password}
+            value={form.password}
+            name='password'
             className='validate'
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            onChange={formChangeHandler}
           />
           <label htmlFor='password'>Пароль</label>
         </div>
