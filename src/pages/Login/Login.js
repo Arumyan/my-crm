@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
 import { authAPI } from '../../api/authAPI';
 //import Loader from '../../components/Loader/Loader';
-import { setAuthActionCreator } from '../../redux/reducers/authReducer';
+import { loginThunk } from '../../redux/reducers/authReducer';
 
 const Login = () => {
   const isAuth = useSelector((state) => state.authReducer.isAuth)
@@ -26,17 +26,20 @@ const Login = () => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    setError(null);
+    //setError(null);
 
     if(formValidate()) {
-      setLoading(true);
-      authAPI.login(email, password).then(() => {
-        setLoading(false);
-        dispatch(setAuthActionCreator({ isAuth: true }));
-      })
-      .catch((err) => {
-        setLoading(false);
-        setError(err.message);
+      // setLoading(true);
+      // authAPI.login(email, password).then(() => {
+      //   setLoading(false);
+      //   dispatch(setAuthActionCreator({ isAuth: true }));
+      // })
+      // .catch((err) => {
+      //   setLoading(false);
+      //   setError(err.message);
+      // })
+      dispatch(loginThunk(email, password)).catch((e) => {
+        console.log('Произошла ошибка' + e)
       })
     }
   };
