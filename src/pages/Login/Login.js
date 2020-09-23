@@ -3,9 +3,7 @@ import './Login.scss';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
-import {
-  loginThunk
-} from '../../redux/reducers/authReducer';
+import { loginThunk } from '../../redux/reducers/authReducer';
 import { useFormik } from 'formik';
 
 const Login = () => {
@@ -22,33 +20,38 @@ const Login = () => {
   // }
 
   const dispatch = useDispatch();
+
+  const initialValues = {
+    email: '',
+    password: '',
+  };
+
+  const onSubmit = (values) => {
+    dispatch(loginThunk(values.email, values.password));
+  };
+
+  const validate = (values) => {
+    let errors = {};
+
+    if (!values.email) {
+      errors.email = 'Введите Email';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+      errors.email = 'Email введен некорректно';
+    }
+
+    if (!values.password) {
+      errors.password = 'Введите пароль';
+    } else if (values.password.length < 6) {
+      errors.password = 'Пароль должен быть не меньше 6 символов';
+    }
+
+    return errors;
+  };
+
   const formik = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-    },
-    onSubmit: (values) => {
-      dispatch(loginThunk(values.email, values.password))
-    },
-    validate: (values) => {
-      let errors = {};
-
-      if (!values.email) {
-        errors.email = 'Введите Email';
-      } else if (
-        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-      ) {
-        errors.email = 'Email введен некорректно';
-      }
-
-      if (!values.password) {
-        errors.password = 'Введите пароль';
-      } else if (values.password.length < 6) {
-        errors.password = 'Пароль должен быть не меньше 6 символов';
-      }
-
-      return errors;
-    },
+    initialValues,
+    onSubmit,
+    validate,
   });
 
   if (isAuth) {
@@ -66,11 +69,11 @@ const Login = () => {
             type='text'
             value={formik.values.email}
             name='email'
-            //className='validate'
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
           <label htmlFor='email'>Email</label>
+
           {formik.touched.email && formik.errors.email ? (
             <span className='helper-text red-text text-darken-1'>
               {formik.errors.email}
@@ -84,7 +87,6 @@ const Login = () => {
             type='password'
             value={formik.values.password}
             name='password'
-            //className={'validate'}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />

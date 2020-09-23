@@ -56,3 +56,15 @@ export const logoutThunk = () => (dispatch) => {
       console.log(e);
     });
 };
+
+export const registerThunk = (email, password, name) => (dispatch) => {
+  dispatch(setAuthActionCreator({ isLoading: true, error: null }));
+  authAPI
+    .register(email, password, name)
+    .then(() => {
+      dispatch(setAuthActionCreator({ isAuth: true, isLoading: false }));
+    })
+    .catch((e) => {
+      dispatch(setAuthActionCreator({ isLoading: false, error: e.message }));
+    });
+};

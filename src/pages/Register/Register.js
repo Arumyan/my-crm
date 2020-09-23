@@ -1,49 +1,62 @@
-import React, { useState } from 'react';
-import { NavLink, useHistory } from 'react-router-dom';
+import React from 'react';
+import { NavLink, Redirect } from 'react-router-dom';
 
-import { useDispatch } from 'react-redux';
-import { authAPI } from '../../api/authAPI';
-import { setAuthActionCreator } from '../../redux/reducers/authReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerThunk } from '../../redux/reducers/authReducer';
+import { useFormik } from 'formik';
 
 const Register = () => {
-  const history = useHistory();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { isAuth, isLoading, error } = useSelector(
+    (state) => state.authReducer
+  );
 
   const dispatch = useDispatch();
 
-  const formValidate = () => {
-    if(email === '' || password === '' || name === '') {
-      setError('Поля не должен быть пустыми')
-      return false
-    }
-
-    return true
+  const initialValues = {
+    email: '',
+    password: '',
+    name: ''
   }
 
-  const onSubmitHandler = (e) => {
-    e.preventDefault()
-    setError(null);
-    
-    if(formValidate()) {
-      setLoading(true);
-      authAPI.register(email, password, name).then(() => {
-        setLoading(false);
-        dispatch(setAuthActionCreator({isAuth: true}))
-        history.push('/')
-      }).catch((err) => {
-        setLoading(false);
-        setError(err.message);
-      })
+  const onSubmit = (values) => {
+    dispatch(registerThunk(values.email, values.password, values.name))
+  }
+
+  const validate = (values) => {
+    let errors = {};
+
+    if (!values.email) {
+      errors.email = 'Введите Email';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+      errors.email = 'Email введен некорректно';
     }
+
+    if (!values.password) {
+      errors.password = 'Введите пароль';
+    } else if (values.password.length < 6) {
+      errors.password = 'Пароль должен быть не меньше 6 символов';
+    }
+
+    if(!values.name) {
+      errors.name = 'Введите имя';
+    }
+
+    return errors;
+  };
+
+  const formik = useFormik({
+    initialValues,
+    onSubmit,
+    validate,
+  });
+
+  if (isAuth) {
+    return <Redirect to='/' />;
   }
 
   return (
-    <form className='card auth-card' onSubmit={onSubmitHandler}>
+    <form className='card auth-card' onSubmit={formik.handleSubmit}>
       <div className='card-content'>
         <span className='card-title'>Домашняя бухгалтерия</span>
 
@@ -51,38 +64,51 @@ const Register = () => {
           <input
             id='email'
             type='text'
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            name="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
           <label htmlFor='email'>Email</label>
+          {formik.touched.email && formik.errors.email ? (
+            <span className='helper-text red-text text-darken-1'>
+              {formik.errors.email}
+            </span>
+          ) : null}
         </div>
 
         <div className='input-field'>
           <input
             id='password'
             type='password'
-            className='validate'
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            name='password'
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
           <label htmlFor='password'>Пароль</label>
+          {formik.touched.password && formik.errors.password ? (
+            <span className='helper-text red-text text-darken-1'>
+              {formik.errors.password}
+            </span>
+          ) : null}
         </div>
 
         <div className='input-field'>
           <input
             id='name'
             type='text'
-            className='validate'
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
+            name='name'
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
           <label htmlFor='name'>Имя</label>
+          {formik.touched.name && formik.errors.name ? (
+            <span className='helper-text red-text text-darken-1'>
+              {formik.errors.name}
+            </span>
+          ) : null}
         </div>
         <p>
           <label>
@@ -91,17 +117,17 @@ const Register = () => {
           </label>
         </p>
 
-        {
-          error && (<span className='form-message red-text text-lighten-1'>{error}</span>)
-        }
+        {error && (
+          <span className='form-message red-text text-lighten-1'>{error}</span>
+        )}
       </div>
-      
+
       <div className='card-action'>
         <div>
           <button
             className='btn waves-effect waves-light auth-submit'
             type='submit'
-            disabled={loading}
+            disabled={isLoading}
           >
             Зарегистрироваться
             <i className='material-icons right'>send</i>
