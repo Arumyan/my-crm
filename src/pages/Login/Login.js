@@ -1,48 +1,62 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Login.scss';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
-import { loginThunk, setAuthActionCreator } from '../../redux/reducers/authReducer';
+import {
+  loginThunk
+} from '../../redux/reducers/authReducer';
+import { useFormik } from 'formik';
 
 const Login = () => {
+  const { isAuth, isLoading, error } = useSelector(
+    (state) => state.authReducer
+  );
+  // const [form, setForm] = useState({
+  //   email: '',
+  //   password: ''
+  // })
 
-  const {isAuth, isLoading, error} = useSelector((state) => state.authReducer)
-  const [form, setForm] = useState({
-    email: '',
-    password: ''
-  })
+  // const formChangeHandler = (e) => {
+  //   setForm({...form, [e.target.name]: e.target.value})
+  // }
 
   const dispatch = useDispatch();
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    onSubmit: (values) => {
+      dispatch(loginThunk(values.email, values.password))
+    },
+    validate: (values) => {
+      let errors = {};
 
-  const formChangeHandler = (e) => {
-    setForm({...form, [e.target.name]: e.target.value})
-  }
+      if (!values.email) {
+        errors.email = 'Введите Email';
+      } else if (
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+      ) {
+        errors.email = 'Email введен некорректно';
+      }
 
-  const formValidate = () => {
-    dispatch(setAuthActionCreator({error: null}))
-    if (form.email === '' || form.password === '') {
-      dispatch(setAuthActionCreator({error: 'Поля не должен быть пустыми'}))
-      return false;
-    }
+      if (!values.password) {
+        errors.password = 'Введите пароль';
+      } else if (values.password.length < 6) {
+        errors.password = 'Пароль должен быть не меньше 6 символов';
+      }
 
-    return true;
-  };
-
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-
-    if (formValidate()) {
-      dispatch(loginThunk(form.email, form.password))
-    }
-  };
+      return errors;
+    },
+  });
 
   if (isAuth) {
     return <Redirect to='/' />;
   }
 
   return (
-    <form className='card auth-card' onSubmit={onSubmitHandler}>
+    <form className='card auth-card' onSubmit={formik.handleSubmit}>
       <div className='card-content'>
         <h1 className='card-title'>Домашняя бухгалтерия</h1>
 
@@ -50,24 +64,36 @@ const Login = () => {
           <input
             id='email'
             type='text'
-            value={form.email}
+            value={formik.values.email}
             name='email'
-            className='validate'
-            onChange={formChangeHandler}
+            //className='validate'
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
           <label htmlFor='email'>Email</label>
+          {formik.touched.email && formik.errors.email ? (
+            <span className='helper-text red-text text-darken-1'>
+              {formik.errors.email}
+            </span>
+          ) : null}
         </div>
 
         <div className='input-field'>
           <input
             id='password'
             type='password'
-            value={form.password}
+            value={formik.values.password}
             name='password'
-            className='validate'
-            onChange={formChangeHandler}
+            //className={'validate'}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
           <label htmlFor='password'>Пароль</label>
+          {formik.touched.password && formik.errors.password ? (
+            <span className='helper-text red-text text-darken-1'>
+              {formik.errors.password}
+            </span>
+          ) : null}
         </div>
 
         {error && (
