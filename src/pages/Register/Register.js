@@ -5,9 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerThunk } from '../../redux/reducers/authReducer';
 import { useFormik } from 'formik';
 
-
 const Register = () => {
-
   const { isAuth, isLoading, error } = useSelector(
     (state) => state.authReducer
   );
@@ -17,12 +15,12 @@ const Register = () => {
   const initialValues = {
     email: '',
     password: '',
-    name: ''
-  }
+    name: '',
+  };
 
   const onSubmit = (values) => {
-    dispatch(registerThunk(values.email, values.password, values.name))
-  }
+    dispatch(registerThunk(values.email, values.password, values.name));
+  };
 
   const validate = (values) => {
     let errors = {};
@@ -39,13 +37,18 @@ const Register = () => {
       errors.password = 'Пароль должен быть не меньше 6 символов';
     }
 
-    if(!values.name) {
+    if (!values.name) {
       errors.name = 'Введите имя';
     }
 
     return errors;
   };
 
+  /*
+  The code below for validation is made to understand exactly what Formik does:
+  onChange -> handleChange, onBlur -> handleBlur, and so on.
+  Reduced boilerplate code is on the Login page 
+  */
   const formik = useFormik({
     initialValues,
     onSubmit,
@@ -65,7 +68,7 @@ const Register = () => {
           <input
             id='email'
             type='text'
-            name="email"
+            name='email'
             value={formik.values.email}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
