@@ -1,12 +1,11 @@
 import firebase from 'firebase/app';
 
 export const authAPI = {
-
   getUserID() {
     const user = firebase.auth().currentUser;
     const uid = user ? user.uid : null;
 
-    return uid
+    return uid;
   },
 
   login(email, password) {

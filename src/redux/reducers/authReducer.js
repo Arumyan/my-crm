@@ -1,4 +1,7 @@
 import { authAPI } from '../../api/authAPI';
+import { infoAPI } from '../../api/infoAPI';
+import firebase from 'firebase/app';
+import { setInfoActionCreator } from './infoReducer';
 
 // ACTION
 //----------------------------------------------//
@@ -67,4 +70,25 @@ export const registerThunk = (email, password, name) => (dispatch) => {
     .catch((e) => {
       dispatch(setAuthActionCreator({ isLoading: false, error: e.message }));
     });
+};
+
+export const authThunk = () => (dispatch) => {
+  dispatch(setAuthActionCreator({ isLoading: true }));
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      infoAPI
+        .fetchInfo()
+        .then((data) => {
+          dispatch(setInfoActionCreator(data));
+          dispatch(setAuthActionCreator({ isAuth: true, isLoading: false }));
+        })
+        .catch((e) => {
+          dispatch(
+            setAuthActionCreator({ isLoading: false, error: e.message })
+          );
+        });
+    } else {
+      dispatch(setAuthActionCreator({ isLoading: true }));
+    }
+  });
 };

@@ -1,43 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import './App.scss';
 
-import { routes } from './routes/routes';
-import AppRoute from './hoc/AppRoute';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { infoAPI } from './api/infoAPI';
-import { setInfoAction } from './redux/reducers/infoReducer';
-import firebase from 'firebase/app';
-import { useDispatch } from 'react-redux';
+import { routes } from './routes/routes';
+import { authThunk } from './redux/reducers/authReducer';
+import AppRoute from './hoc/AppRoute';
 import Loader from './components/Loader/Loader';
-import {setAuthActionCreator} from './redux/reducers/authReducer'
 
 const App = () => {
-  const [isInitialize, setInitialize] = useState(false);
-  const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        infoAPI
-          .fetchInfo()
-          .then((data) => {
-            dispatch(setInfoAction(data));
-            dispatch(setAuthActionCreator({isAuth: true}))
-            setInitialize(true)
-          })
-          .catch((e) => {
-            setInitialize(true)
-            setError(e.message)
-          });
-      } else {
-        setInitialize(true)
-      }
-    });
-  });
+  const { isLoading, error } = useSelector(
+    (state) => state.authReducer
+  );
 
-  if(!isInitialize) {
+  useEffect(() => {
+    dispatch(authThunk())
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if(isLoading) {
     return <Loader/>
   }
 

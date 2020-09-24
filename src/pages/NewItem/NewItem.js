@@ -7,7 +7,7 @@ import { setCategoriesCreator } from '../../redux/reducers/categoriesReducer';
 import { categoryAPI } from '../../api/categoryAPI';
 import { itemAPI } from '../../api/itemAPI';
 import { infoAPI } from '../../api/infoAPI';
-import { setInfoAction } from '../../redux/reducers/infoReducer';
+import { setInfoActionCreator } from '../../redux/reducers/infoReducer';
 import { NavLink } from 'react-router-dom';
 
 const NewItem = () => {
@@ -66,7 +66,7 @@ const NewItem = () => {
           return infoAPI.fetchInfo();
         })
         .then((data) => {
-          dispatch(setInfoAction(data));
+          dispatch(setInfoActionCreator(data));
         });
 
       setAmount(1);
