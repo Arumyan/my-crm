@@ -4,6 +4,7 @@ import { itemAPI } from '../../api/itemAPI';
 import { categoryAPI } from '../../api/categoryAPI';
 import Loader from '../../components/Loader/Loader';
 import { useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
 const Planning = () => {
   const [loading, setLoading] = useState(true);
@@ -11,7 +12,6 @@ const Planning = () => {
   const bill = useSelector((state) => state.infoReducer.info.bill);
 
   useEffect(() => {
-
     async function loadData() {
       const categories = await categoryAPI.getCategories();
 
@@ -23,12 +23,12 @@ const Planning = () => {
             .reduce((total, item) => {
               return (total += +item.amount);
             }, 0);
-  
+
           const percent = (100 * spend) / category.limit;
           const progressPercent = percent > 100 ? 100 : percent;
           const progressColor =
             percent < 60 ? 'green' : percent < 100 ? 'yellow' : 'red';
-  
+
           return {
             ...category,
             progressPercent,
@@ -36,14 +36,13 @@ const Planning = () => {
             spend,
           };
         });
-        
+
         setItems(transformedData);
         setLoading(false);
       });
     }
 
-    loadData()
-
+    loadData();
   }, []);
 
   if (loading) {
@@ -51,31 +50,40 @@ const Planning = () => {
   }
 
   return (
-    <div>
+    <>
       <div className='page-title page-title-planning'>
         <h3>Планирование</h3>
         <h4 className='bill'>{bill}</h4>
       </div>
 
-      <section>
-        {items.map((item) => {
-          return (
-            <div key={item.id}>
-              <p>
-                <strong>{item.name}:</strong>
-                {item.spend} из {item.limit}
-              </p>
-              <div className='progress'>
-                <div
-                  className={'determinate ' + item.progressColor}
-                  style={{ width: item.progressPercent + '%' }}
-                ></div>
+      {!items.length && (
+        <p className='center'>
+          Записей пока нет,
+          <NavLink to={'/new-item'}>создать запись</NavLink>
+        </p>
+      )}
+
+      {items.length > 0 && (
+        <section>
+          {items.map((item) => {
+            return (
+              <div key={item.id}>
+                <p>
+                  <strong>{item.name}:</strong>
+                  {item.spend} из {item.limit}
+                </p>
+                <div className='progress'>
+                  <div
+                    className={'determinate ' + item.progressColor}
+                    style={{ width: item.progressPercent + '%' }}
+                  ></div>
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </section>
-    </div>
+            );
+          })}
+        </section>
+      )}
+    </>
   );
 };
 

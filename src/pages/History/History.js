@@ -3,6 +3,7 @@ import HistoryTable from './HistoryTable/HistoryTable';
 import { itemAPI } from '../../api/itemAPI';
 import { categoryAPI } from '../../api/categoryAPI';
 import Loader from '../../components/Loader/Loader';
+import { NavLink } from 'react-router-dom';
 
 const History = () => {
   const [records, setRecords] = useState([]);
@@ -13,21 +14,23 @@ const History = () => {
       const categories = await categoryAPI.getCategories();
       const records = await itemAPI.getItems();
 
-      const transformedRecords = records.map(record => {
+      const transformedRecords = records.map((record) => {
         return {
           ...record,
-          categoryName: categories.find((category) => category.id === record.categoryId).name,
+          categoryName: categories.find(
+            (category) => category.id === record.categoryId
+          ).name,
           typeClass: record.type === 'income' ? 'green' : 'red',
           typeText: record.type === 'income' ? 'Доход' : 'Расход',
-        }
-      })
+        };
+      });
 
-      setRecords(transformedRecords)
-      setLoading(false)
+      setRecords(transformedRecords);
+      setLoading(false);
     }
 
-    loadData()
-  }, [])
+    loadData();
+  }, []);
 
   return (
     <>
@@ -35,14 +38,18 @@ const History = () => {
         <h3>История записей</h3>
       </div>
 
-      <div className='history-chart'>
+      {/* <div className='history-chart'>
         <canvas></canvas>
-      </div>
+      </div> */}
 
       <section>
-        {loading && <Loader/>}
-        {!loading && !records.length && <p class="center">Записей пока нет</p>}
-        {!loading && records.length && <HistoryTable  records={records}/>}
+        {loading && <Loader />}
+        {!loading && !records.length && (
+          <p className='center'>
+            Записей пока нет, <NavLink to={'/new-item'}>создать запись</NavLink>
+          </p>
+        )}
+        {!loading && records.length > 0 && <HistoryTable records={records} />}
       </section>
     </>
   );
