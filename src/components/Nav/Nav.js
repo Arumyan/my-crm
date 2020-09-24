@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Nav.scss';
 import { NavLink, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setAuthActionCreator } from '../../redux/reducers/authReducer';
-import { authAPI } from '../../api/authAPI';
+import { logoutThunk } from '../../redux/reducers/authReducer';
 
 const Nav = ({ toggleNav, userName }) => {
   const [date] = useState(new Date());
@@ -24,16 +23,8 @@ const Nav = ({ toggleNav, userName }) => {
 
   const logout = (e) => {
     e.preventDefault();
-
-    authAPI
-      .logout()
-      .then(() => {
-        dispatch(setAuthActionCreator({ isAuth: false }));
-        history.push('/login?message=logout');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    dispatch(logoutThunk());
+    history.push('/login?message=logout');
   };
 
   return (

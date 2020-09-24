@@ -1,106 +1,107 @@
-import React, { useState } from 'react';
-import './Login.scss'
+import React from 'react';
+import './Login.scss';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
-import { authAPI } from '../../api/authAPI';
-//import Loader from '../../components/Loader/Loader';
-import { setAuthActionCreator } from '../../redux/reducers/authReducer';
+import { loginThunk } from '../../redux/reducers/authReducer';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 const Login = () => {
-  const isAuth = useSelector((state) => state.authReducer.isAuth)
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { isAuth, isLoading, error } = useSelector(
+    (state) => state.authReducer
+  );
+
+  // variant handling input
+  // const [form, setForm] = useState({
+  //   email: '',
+  //   password: ''
+  // })
+
+  // const formChangeHandler = (e) => {
+  //   setForm({...form, [e.target.name]: e.target.value})
+  // }
 
   const dispatch = useDispatch();
 
-  const formValidate = () => {
-    if(email === '' || password === '') {
-      setError('Поля не должен быть пустыми')
-      return false
-    }
-
-    return true
-  }
-
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-    setError(null);
-
-    if(formValidate()) {
-      setLoading(true);
-      authAPI.login(email, password).then(() => {
-        setLoading(false);
-        dispatch(setAuthActionCreator({ isAuth: true }));
-      })
-      .catch((err) => {
-        setLoading(false);
-        setError(err.message);
-      })
-    }
+  const initialValues = {
+    email: '',
+    password: '',
   };
+
+  const onSubmit = (values) => {
+    dispatch(loginThunk(values.email, values.password));
+  };
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email('Email введен некорректно')
+      .required('Введите Email'),
+    password: Yup.string()
+      .min(6, 'Пароль должен быть не меньше 6 символов')
+      .required('Введите пароль'),
+  });
 
   if (isAuth) {
     return <Redirect to='/' />;
   }
 
   return (
-    <form className='card auth-card' onSubmit={onSubmitHandler}>
-      <div className='card-content'>
-        <h1 className='card-title'>Домашняя бухгалтерия</h1>
+    <Formik
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      validationSchema={validationSchema}
+    >
+      <Form className='card auth-card'>
+        <div className='card-content'>
+          <h1 className='card-title'>Домашняя бухгалтерия</h1>
 
-        <div className='input-field'>
-          <input
-            id='email'
-            type='text'
-            value={email}
-            className='validate'
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
-          <label htmlFor='email'>Email</label>
+          <div className='input-field'>
+            <Field id='email' type='text' name='email' />
+            <label htmlFor='email'>Email</label>
+            <ErrorMessage
+              name='email'
+              component='span'
+              className='helper-text red-text text-darken-1'
+            />
+          </div>
+
+          <div className='input-field'>
+            <Field id='password' type='password' name='password' />
+            <label htmlFor='password'>Пароль</label>
+            <ErrorMessage
+              name='password'
+              component='span'
+              className='helper-text red-text text-darken-1'
+            />
+          </div>
+
+          {error && (
+            <span className='form-message red-text text-lighten-1'>
+              {error}
+            </span>
+          )}
         </div>
 
-        <div className='input-field'>
-          <input
-            id='password'
-            type='password'
-            value={password}
-            className='validate'
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-          <label htmlFor='password'>Пароль</label>
+        <div className='card-action'>
+          <div>
+            <button
+              className='btn waves-effect waves-light auth-submit'
+              type='submit'
+              disabled={isLoading}
+            >
+              Войти
+              <i className='material-icons right'>send</i>
+            </button>
+          </div>
+
+          <p className='center'>
+            Нет аккаунта?
+            <NavLink to={'/register'}> Зарегистрироваться</NavLink>
+          </p>
         </div>
-        
-        {
-          error && (<span className='form-message red-text text-lighten-1'>{error}</span>)
-        }
-        
-
-      </div>
-
-      <div className='card-action'>
-        <div>
-          <button 
-            className='btn waves-effect waves-light auth-submit'
-            type='submit'
-            disabled={loading}
-          >
-            Войти
-            <i className='material-icons right'>send</i>
-          </button>
-        </div>
-
-        <p className='center'>
-          Нет аккаунта?
-          <NavLink to={'/register'}> Зарегистрироваться</NavLink>
-        </p>
-      </div>
-    </form>
+      </Form>
+    </Formik>
   );
 };
 

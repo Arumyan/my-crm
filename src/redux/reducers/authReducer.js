@@ -1,3 +1,5 @@
+import { authAPI } from '../../api/authAPI';
+
 // ACTION
 //----------------------------------------------//
 export const SET_AUTH = 'auth/SET_AUTH';
@@ -5,7 +7,9 @@ export const SET_AUTH = 'auth/SET_AUTH';
 // REDUCER
 //----------------------------------------------//
 const initialState = {
-  isAuth: false
+  isAuth: false,
+  isLoading: false,
+  error: null,
 };
 
 export default function authReducer(state = initialState, action) {
@@ -13,7 +17,7 @@ export default function authReducer(state = initialState, action) {
     case SET_AUTH:
       return {
         ...state,
-        ...action.payload,
+        ...action.authData,
       };
 
     default:
@@ -24,5 +28,43 @@ export default function authReducer(state = initialState, action) {
 // ACTION CREATOR
 //----------------------------------------------//
 export const setAuthActionCreator = (authData) => {
-  return { type: SET_AUTH, payload: authData}
-}
+  return { type: SET_AUTH, authData };
+};
+
+// THUNK
+//----------------------------------------------//
+export const loginThunk = (email, password) => (dispatch) => {
+  dispatch(setAuthActionCreator({ isLoading: true, error: null }));
+
+  authAPI
+    .login(email, password)
+    .then(() => {
+      dispatch(setAuthActionCreator({ isAuth: true, isLoading: false }));
+    })
+    .catch((e) => {
+      dispatch(setAuthActionCreator({ isLoading: false, error: e.message }));
+    });
+};
+
+export const logoutThunk = () => (dispatch) => {
+  authAPI
+    .logout()
+    .then(() => {
+      dispatch(setAuthActionCreator({ isAuth: false }));
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+};
+
+export const registerThunk = (email, password, name) => (dispatch) => {
+  dispatch(setAuthActionCreator({ isLoading: true, error: null }));
+  authAPI
+    .register(email, password, name)
+    .then(() => {
+      dispatch(setAuthActionCreator({ isAuth: true, isLoading: false }));
+    })
+    .catch((e) => {
+      dispatch(setAuthActionCreator({ isLoading: false, error: e.message }));
+    });
+};

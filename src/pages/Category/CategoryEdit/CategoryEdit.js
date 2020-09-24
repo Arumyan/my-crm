@@ -66,7 +66,7 @@ const CategoryEdit = ({ categories, updateCategories }) => {
 
         <form onSubmit={onSubmitHandler}>
           <div className='input-field'>
-            <select ref={selectEl} onChange={onChangeSelect}>
+            <select ref={selectEl} onChange={onChangeSelect} disabled={!categories.length}>
               {categories.map((category) => {
                 return (
                   <option key={category.id} value={category.id}>
@@ -83,6 +83,7 @@ const CategoryEdit = ({ categories, updateCategories }) => {
               type='text'
               id='name'
               value={currentCategory.name}
+              disabled={!categories.length}
               onChange={(e) =>
                 setCurrentCategory({ ...currentCategory, name: e.target.value })
               }
@@ -95,6 +96,7 @@ const CategoryEdit = ({ categories, updateCategories }) => {
               id='limit'
               type='number'
               value={currentCategory.limit}
+              disabled={!categories.length}
               onChange={(e) =>
                 setCurrentCategory({
                   ...currentCategory,
@@ -105,7 +107,7 @@ const CategoryEdit = ({ categories, updateCategories }) => {
             <label htmlFor='limit'>Лимит</label>
           </div>
 
-          <button className='btn waves-effect waves-light' type='submit'>
+          <button className='btn waves-effect waves-light' type='submit' disabled={!categories.length}>
             Обновить
             <i className='material-icons right'>send</i>
           </button>
