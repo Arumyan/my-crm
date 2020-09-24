@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerThunk } from '../../redux/reducers/authReducer';
 import { useFormik } from 'formik';
 
+
 const Register = () => {
 
   const { isAuth, isLoading, error } = useSelector(

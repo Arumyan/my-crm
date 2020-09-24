@@ -4,12 +4,15 @@ import './Login.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
 import { loginThunk } from '../../redux/reducers/authReducer';
-import { useFormik } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 const Login = () => {
   const { isAuth, isLoading, error } = useSelector(
     (state) => state.authReducer
   );
+
+  // variant handling input
   // const [form, setForm] = useState({
   //   email: '',
   //   password: ''
@@ -30,28 +33,13 @@ const Login = () => {
     dispatch(loginThunk(values.email, values.password));
   };
 
-  const validate = (values) => {
-    let errors = {};
-
-    if (!values.email) {
-      errors.email = 'Введите Email';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-      errors.email = 'Email введен некорректно';
-    }
-
-    if (!values.password) {
-      errors.password = 'Введите пароль';
-    } else if (values.password.length < 6) {
-      errors.password = 'Пароль должен быть не меньше 6 символов';
-    }
-
-    return errors;
-  };
-
-  const formik = useFormik({
-    initialValues,
-    onSubmit,
-    validate,
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email('Email введен некорректно')
+      .required('Введите Email'),
+    password: Yup.string()
+      .min(6, 'Пароль должен быть не меньше 6 символов')
+      .required('Введите пароль'),
   });
 
   if (isAuth) {
@@ -59,68 +47,61 @@ const Login = () => {
   }
 
   return (
-    <form className='card auth-card' onSubmit={formik.handleSubmit}>
-      <div className='card-content'>
-        <h1 className='card-title'>Домашняя бухгалтерия</h1>
+    <Formik
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      validationSchema={validationSchema}
+    >
+      <Form className='card auth-card'>
+        <div className='card-content'>
+          <h1 className='card-title'>Домашняя бухгалтерия</h1>
 
-        <div className='input-field'>
-          <input
-            id='email'
-            type='text'
-            value={formik.values.email}
-            name='email'
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          <label htmlFor='email'>Email</label>
+          <div className='input-field'>
+            <Field id='email' type='text' name='email' />
+            <label htmlFor='email'>Email</label>
+            <ErrorMessage
+              name='email'
+              component='span'
+              className='helper-text red-text text-darken-1'
+            />
+          </div>
 
-          {formik.touched.email && formik.errors.email ? (
-            <span className='helper-text red-text text-darken-1'>
-              {formik.errors.email}
+          <div className='input-field'>
+            <Field id='password' type='password' name='password' />
+            <label htmlFor='password'>Пароль</label>
+            <ErrorMessage
+              name='password'
+              component='span'
+              className='helper-text red-text text-darken-1'
+            />
+          </div>
+
+          {error && (
+            <span className='form-message red-text text-lighten-1'>
+              {error}
             </span>
-          ) : null}
+          )}
         </div>
 
-        <div className='input-field'>
-          <input
-            id='password'
-            type='password'
-            value={formik.values.password}
-            name='password'
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          <label htmlFor='password'>Пароль</label>
-          {formik.touched.password && formik.errors.password ? (
-            <span className='helper-text red-text text-darken-1'>
-              {formik.errors.password}
-            </span>
-          ) : null}
+        <div className='card-action'>
+          <div>
+            <button
+              className='btn waves-effect waves-light auth-submit'
+              type='submit'
+              disabled={isLoading}
+            >
+              Войти
+              <i className='material-icons right'>send</i>
+            </button>
+          </div>
+
+          <p className='center'>
+            Нет аккаунта?
+            <NavLink to={'/register'}> Зарегистрироваться</NavLink>
+          </p>
         </div>
-
-        {error && (
-          <span className='form-message red-text text-lighten-1'>{error}</span>
-        )}
-      </div>
-
-      <div className='card-action'>
-        <div>
-          <button
-            className='btn waves-effect waves-light auth-submit'
-            type='submit'
-            disabled={isLoading}
-          >
-            Войти
-            <i className='material-icons right'>send</i>
-          </button>
-        </div>
-
-        <p className='center'>
-          Нет аккаунта?
-          <NavLink to={'/register'}> Зарегистрироваться</NavLink>
-        </p>
-      </div>
-    </form>
+      </Form>
+    </Formik>
   );
 };
 
