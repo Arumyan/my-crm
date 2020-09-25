@@ -46,10 +46,23 @@ export const getCategoriesThunk = () => (dispatch) => {
 };
 
 export const createCategoryThunk = (name, limit) => (dispatch) => {
-  categoryAPI.createCategory(name, limit).then(() => {
-    return categoryAPI.getCategories()
-  })
-  .then((categories) => {
-    dispatch(setCategoriesCreator({ categories }));
-  });
+  categoryAPI
+    .createCategory(name, limit)
+    .then(() => {
+      return categoryAPI.getCategories();
+    })
+    .then((categories) => {
+      dispatch(setCategoriesCreator({ categories }));
+    });
+};
+
+export const editCategoryThunk = (id, name, limit) => (dispatch) => {
+  categoryAPI
+    .editCategory(id, name, limit)
+    .then(() => {
+      return categoryAPI.getCategories();
+    })
+    .then((categories) => {
+      dispatch(setCategoriesCreator({ categories }));
+    });
 };
