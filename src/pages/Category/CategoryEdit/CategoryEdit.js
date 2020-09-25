@@ -11,14 +11,16 @@ const CategoryEdit = () => {
   const selectEl = useRef(null);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getCategoriesThunk());
-    // eslint-disable-next-line
-  }, []);
-
   const { categories, isLoading } = useSelector(
     (state) => state.categoriesReducer
   );
+
+  useEffect(() => {
+    if(!categories.length) {
+      dispatch(getCategoriesThunk());
+    }
+    // eslint-disable-next-line
+  }, []);
 
   const [currentCategory, setCurrentCategory] = useState({
     id: null,

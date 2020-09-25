@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const BtnAddNewItem = (props) => {
+const BtnAddNewItem = () => {
   return (
     <div className='fixed-action-btn'>
-      <NavLink to='/new-item' className='btn-floating btn-large blue'>
+      <NavLink to='/record' className='btn-floating btn-large blue'>
         <i className='large material-icons'>add</i>
       </NavLink>
     </div>

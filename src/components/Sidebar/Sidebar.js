@@ -18,7 +18,7 @@ const Sidebar = ({isOpen}) => {
         <NavLink to='/planning' className="waves-effect waves-orange pointer">Планирование</NavLink>
       </li>
       <li>
-        <NavLink to='/new-item' className="waves-effect waves-orange pointer">Новая запись</NavLink>
+        <NavLink to='/record' className="waves-effect waves-orange pointer">Новая запись</NavLink>
       </li>
       <li>
         <NavLink to='/category' className="waves-effect waves-orange pointer">Категории</NavLink>
