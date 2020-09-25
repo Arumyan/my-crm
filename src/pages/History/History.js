@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HistoryTable from './HistoryTable/HistoryTable';
-import { itemAPI } from '../../api/itemAPI';
+import { recordAPI } from '../../api/recordAPI';
 import { categoryAPI } from '../../api/categoryAPI';
 import Loader from '../../components/Loader/Loader';
 import { NavLink } from 'react-router-dom';
@@ -12,7 +12,7 @@ const History = () => {
   useEffect(() => {
     async function loadData() {
       const categories = await categoryAPI.getCategories();
-      const records = await itemAPI.getItems();
+      const records = await recordAPI.getRecords();
 
       const transformedRecords = records.map((record) => {
         return {
@@ -46,7 +46,7 @@ const History = () => {
         {loading && <Loader />}
         {!loading && !records.length && (
           <p className='center'>
-            Записей пока нет, <NavLink to={'/new-item'}>создать запись</NavLink>
+            Записей пока нет, <NavLink to={'/record'}>создать запись</NavLink>
           </p>
         )}
         {!loading && records.length > 0 && <HistoryTable records={records} />}

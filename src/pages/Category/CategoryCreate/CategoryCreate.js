@@ -1,36 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import M from 'materialize-css';
-import { categoryAPI } from '../../../api/categoryAPI';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import {createCategoryThunk} from '../../../redux/reducers/categoriesReducer'
+import { useDispatch } from 'react-redux';
 
-const CategoryCreate = ({ updateCategories }) => {
-  const [name, setName] = useState('');
-  const [limit, setLimit] = useState(1);
-  const [error, setError] = useState(null);
-
+const CategoryCreate = () => {
   useEffect(() => {
     M.updateTextFields();
   }, []);
 
-  const formValidate = () => {
-    if(name === '' || limit === '') {
-      setError('Поля не должны быть пустыми')
-      return false
-    }
-    return true
-  }
+  const dispatch = useDispatch();
 
-  const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    setError(null)
-
-    if(formValidate()) {
-      categoryAPI.createCategory(name, limit).then(() => {
-        updateCategories();
-        setName('');
-        setLimit(1);
-      });
-    }
+  const initialValues = {
+    name: '',
+    limit: 1,
   };
+
+  const onSubmit = (values, onSumbitProps) => {
+    dispatch(createCategoryThunk(values.name, values.limit))
+    onSumbitProps.resetForm();
+  };
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required('Название не должно быть пустым'),
+    limit: Yup.number()
+      .typeError('Значение должно быть числом')
+      .min(1, 'Значение не может быть меньше 1')
+      .required('Введите лимит'),
+  });
 
   return (
     <div className='col s12 m6'>
@@ -38,38 +36,44 @@ const CategoryCreate = ({ updateCategories }) => {
         <h4>Создать</h4>
       </div>
 
-      <form onSubmit={onSubmitHandler}>
-        <div className='input-field'>
-          <input
-            id='name'
-            type='text'
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-          />
-          <label htmlFor='name'>Название</label>
-        </div>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        validationSchema={validationSchema}
+      >
+        {(formik) => (
+          <Form>
+            <div className='input-field'>
+              <Field id='name' type='text' name='name' />
+              <label htmlFor='name'>Название</label>
+              <ErrorMessage
+                name='name'
+                component='span'
+                className='helper-text red-text text-darken-1'
+              />
+            </div>
 
-        <div className='input-field'>
-          <input
-            id='limit'
-            type='number'
-            value={limit}
-            onChange={(e) => {
-              setLimit(e.target.value);
-            }}
-          />
-          <label htmlFor='limit'>Лимит</label>
-        </div>
+            <div className='input-field'>
+              <Field id='limit' type='text' name='limit' />
+              <label htmlFor='limit'>Лимит</label>
+              <ErrorMessage
+                name='limit'
+                component='span'
+                className='helper-text red-text text-darken-1'
+              />
+            </div>
 
-        <button className='btn waves-effect waves-light' type='submit'>
-          Создать
-          <i className='material-icons right'>send</i>
-        </button>
-
-        { error && <div className="red-text text-darken-2">{error}</div>}
-      </form>
+            <button
+              className='btn waves-effect waves-light'
+              type='submit'
+              disabled={!(formik.dirty & formik.isValid)}
+            >
+              Создать
+              <i className='material-icons right'>send</i>
+            </button>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };

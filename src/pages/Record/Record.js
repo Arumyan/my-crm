@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './NewItem.scss';
+import './Record.scss';
 import M from 'materialize-css';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategoriesCreator } from '../../redux/reducers/categoriesReducer';
-import { categoryAPI } from '../../api/categoryAPI';
-import { itemAPI } from '../../api/itemAPI';
+import { getCategoriesThunk } from '../../redux/reducers/categoriesReducer';
+import Loader from '../../components/Loader/Loader';
+import { recordAPI } from '../../api/recordAPI';
 import { infoAPI } from '../../api/infoAPI';
 import { setInfoActionCreator } from '../../redux/reducers/infoReducer';
 import { NavLink } from 'react-router-dom';
 
-const NewItem = () => {
+const Record = () => {
   const selectEl = useRef(null);
   const dispatch = useDispatch();
-  const categories = useSelector((state) => state.categoriesReducer.categories);
+  const { categories, isLoading } = useSelector(
+    (state) => state.categoriesReducer
+  );
   const bill = useSelector((state) => state.infoReducer.info.bill);
 
   const [type, setType] = useState('income');
@@ -22,9 +24,9 @@ const NewItem = () => {
 
   useEffect(() => {
     M.updateTextFields();
-    categoryAPI.getCategories().then((categories) => {
-      dispatch(setCategoriesCreator(categories));
-    });
+    if (!categories.length) {
+      dispatch(getCategoriesThunk());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -54,7 +56,7 @@ const NewItem = () => {
         date: new Date().toLocaleString(),
       };
 
-      itemAPI.createNewItem(itemData);
+      recordAPI.createRecord(itemData);
 
       const updatedBill =
         type === 'income'
@@ -145,22 +147,26 @@ const NewItem = () => {
     </form>
   );
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <>
       <div className='page-title'>
         <h3>Новая запись</h3>
       </div>
 
-      {!categories.length && (
+      {categories.length ? (
+        formContent
+      ) : (
         <p className='center'>
           Записей пока нет,{' '}
           <NavLink to={'/category'}>создать категорию</NavLink>
         </p>
       )}
-
-      {categories.length > 0 && formContent}
     </>
   );
 };
 
-export default NewItem;
+export default Record;

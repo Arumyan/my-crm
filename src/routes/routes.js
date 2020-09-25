@@ -2,7 +2,7 @@ import Home from '../Pages/Home/Home';
 import Category from '../Pages/Category/Category';
 import Details from '../Pages/Details/Details';
 import History from '../Pages/History/History';
-import NewItem from '../Pages/NewItem/NewItem';
+import Record from '../Pages/Record/Record';
 import Planning from '../Pages/Planning/Planning';
 import Profile from '../Pages/Profile/Profile';
 import Login from '../Pages/Login/Login';
@@ -42,9 +42,9 @@ export const routes = [
     authRequire: true
   },
   {
-    path: '/new-item',
+    path: '/record',
     exact: true,
-    component: NewItem,
+    component: Record,
     layout: MainLayout,
     authRequire: true
   },

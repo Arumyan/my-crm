@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Planning.scss';
-import { itemAPI } from '../../api/itemAPI';
+import { recordAPI } from '../../api/recordAPI';
 import { categoryAPI } from '../../api/categoryAPI';
 import Loader from '../../components/Loader/Loader';
 import { useSelector } from 'react-redux';
@@ -15,7 +15,7 @@ const Planning = () => {
     async function loadData() {
       const categories = await categoryAPI.getCategories();
 
-      await itemAPI.getItems().then((items) => {
+      await recordAPI.getRecords().then((items) => {
         const transformedData = categories.map((category) => {
           const spend = items
             .filter((item) => item.categoryId === category.id)
@@ -59,7 +59,7 @@ const Planning = () => {
       {!items.length && (
         <p className='center'>
           Записей пока нет,
-          <NavLink to={'/new-item'}>создать запись</NavLink>
+          <NavLink to={'/record'}>создать запись</NavLink>
         </p>
       )}
 
