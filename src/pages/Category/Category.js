@@ -1,27 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './Category.scss';
-
-import { useDispatch, useSelector } from 'react-redux';
-import { getCategoriesThunk } from '../../redux/reducers/categoriesReducer';
 
 import CategoryCreate from './CategoryCreate/CategoryCreate';
 import CategoryEdit from './CategoryEdit/CategoryEdit';
 
 const Category = () => {
-  const dispatch = useDispatch();
-  const { categories, isLoading, error } = useSelector(
-    (state) => state.categoriesReducer
-  );
-
-  const getCategories = () => {
-    dispatch(getCategoriesThunk());
-  };
-
-  useEffect(() => {
-    getCategories();
-    // eslint-disable-next-line
-  }, []);
-
+  
   return (
     <>
       <div className='page-title'>
@@ -31,10 +15,7 @@ const Category = () => {
       <section>
         <div className='row'>
           <CategoryCreate />
-          <CategoryEdit
-            categories={categories}
-            updateCategories={getCategories}
-          />
+          <CategoryEdit />
         </div>
       </section>
     </>
