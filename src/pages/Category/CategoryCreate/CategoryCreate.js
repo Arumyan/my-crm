@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react';
 import M from 'materialize-css';
-import { categoryAPI } from '../../../api/categoryAPI';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import {createCategoryThunk} from '../../../redux/reducers/categoriesReducer'
+import { useDispatch } from 'react-redux';
 
-const CategoryCreate = ({ updateCategories }) => {
+const CategoryCreate = () => {
   useEffect(() => {
     M.updateTextFields();
   }, []);
+
+  const dispatch = useDispatch();
 
   const initialValues = {
     name: '',
@@ -15,10 +18,8 @@ const CategoryCreate = ({ updateCategories }) => {
   };
 
   const onSubmit = (values, onSumbitProps) => {
-    categoryAPI.createCategory(values.name, values.limit).then(() => {
-      updateCategories();
-      onSumbitProps.resetForm();
-    });
+    dispatch(createCategoryThunk(values.name, values.limit))
+    onSumbitProps.resetForm();
   };
 
   const validationSchema = Yup.object({

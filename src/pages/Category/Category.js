@@ -26,7 +26,7 @@ const Category = () => {
   const categoryContent = (
     <section>
       <div className='row'>
-        <CategoryCreate updateCategories={getCategories} />
+        <CategoryCreate />
         <CategoryEdit
           categories={categories}
           updateCategories={getCategories}
