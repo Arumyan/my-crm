@@ -1,12 +1,11 @@
 import firebase from 'firebase/app';
 
 export const authAPI = {
-
   getUserID() {
     const user = firebase.auth().currentUser;
     const uid = user ? user.uid : null;
 
-    return uid
+    return uid;
   },
 
   login(email, password) {
@@ -26,7 +25,7 @@ export const authAPI = {
       })
       .then((uid) => {
         return firebase.database().ref(`/users/${uid}/info`).set({
-          bill: 100,
+          bill: 1000,
           name: name,
         });
       });

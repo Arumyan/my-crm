@@ -23,6 +23,6 @@ export default function infoReducer(state = initialState, action) {
 
 // ACTION CREATOR
 //----------------------------------------------//
-export const setInfoAction = (payload) => {
+export const setInfoActionCreator = (payload) => {
   return { type: SET_INFO, payload }
 }

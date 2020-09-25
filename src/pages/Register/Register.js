@@ -45,7 +45,7 @@ const Register = () => {
   };
 
   /*
-  The code below for validation is made to understand exactly what Formik does:
+  The code below for validation is for understanding exactly what Formik does:
   onChange -> handleChange, onBlur -> handleBlur, and so on.
   Reduced boilerplate code is on the Login page 
   */
