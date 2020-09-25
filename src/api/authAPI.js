@@ -25,7 +25,7 @@ export const authAPI = {
       })
       .then((uid) => {
         return firebase.database().ref(`/users/${uid}/info`).set({
-          bill: 100,
+          bill: 1000,
           name: name,
         });
       });

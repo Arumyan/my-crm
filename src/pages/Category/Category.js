@@ -2,26 +2,38 @@ import React, { useEffect } from 'react';
 import './Category.scss';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategoriesCreator } from '../../redux/reducers/categoriesReducer';
-import { categoryAPI } from '../../api/categoryAPI';
+import { getCategoriesThunk } from '../../redux/reducers/categoriesReducer';
 
 import CategoryCreate from './CategoryCreate/CategoryCreate';
 import CategoryEdit from './CategoryEdit/CategoryEdit';
+import Loader from '../../components/Loader/Loader';
 
 const Category = () => {
   const dispatch = useDispatch();
-  const categories = useSelector((state) => state.categoriesReducer.categories);
+  const { categories, isLoading, error } = useSelector(
+    (state) => state.categoriesReducer
+  );
 
-  const updateCategories = () => {
-    categoryAPI.getCategories().then((categories) => {
-      dispatch(setCategoriesCreator(categories));
-    });
+  const getCategories = () => {
+    dispatch(getCategoriesThunk());
   };
 
   useEffect(() => {
-    updateCategories();
+    getCategories();
     // eslint-disable-next-line
   }, []);
+
+  const categoryContent = (
+    <section>
+      <div className='row'>
+        <CategoryCreate updateCategories={getCategories} />
+        <CategoryEdit
+          categories={categories}
+          updateCategories={getCategories}
+        />
+      </div>
+    </section>
+  );
 
   return (
     <>
@@ -29,15 +41,13 @@ const Category = () => {
         <h3>Категории</h3>
       </div>
 
-      <section>
-        <div className='row'>
-          <CategoryCreate updateCategories={updateCategories} />
-          <CategoryEdit
-              categories={categories}
-              updateCategories={updateCategories}
-            />
-        </div>
-      </section>
+      {isLoading && <Loader />}
+
+      {error && (
+        <p className='red-text text-lighten-1'>Произошла ошибка: {error}</p>
+      )}
+
+      {!isLoading && !error && categoryContent}
     </>
   );
 };
