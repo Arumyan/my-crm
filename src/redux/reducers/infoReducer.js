@@ -1,3 +1,5 @@
+import { infoAPI } from '../../api/infoAPI';
+
 // ACTION
 //----------------------------------------------//
 export const SET_INFO = 'info/SET_INFO';
@@ -5,7 +7,7 @@ export const SET_INFO = 'info/SET_INFO';
 // REDUCER
 //----------------------------------------------//
 const initialState = {
-  info: {}
+  info: {},
 };
 
 export default function infoReducer(state = initialState, action) {
@@ -13,7 +15,7 @@ export default function infoReducer(state = initialState, action) {
     case SET_INFO:
       return {
         ...state,
-        info: {...action.payload}
+        info: { ...action.payload },
       };
 
     default:
@@ -24,5 +26,18 @@ export default function infoReducer(state = initialState, action) {
 // ACTION CREATOR
 //----------------------------------------------//
 export const setInfoActionCreator = (payload) => {
-  return { type: SET_INFO, payload }
-}
+  return { type: SET_INFO, payload };
+};
+
+//THUNK
+//----------------------------------------------//
+export const updateInfoThunk = (infoData) => (dispatch) => {
+  infoAPI
+    .updateInfo(infoData)
+    .then(() => {
+      return infoAPI.fetchInfo();
+    })
+    .then((data) => {
+      dispatch(setInfoActionCreator(data));
+    });
+};
