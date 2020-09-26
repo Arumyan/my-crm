@@ -88,7 +88,7 @@ export const authThunk = () => (dispatch) => {
           );
         });
     } else {
-      dispatch(setAuthActionCreator({ isLoading: true }));
+      dispatch(setAuthActionCreator({ isLoading: false }));
     }
   });
 };
