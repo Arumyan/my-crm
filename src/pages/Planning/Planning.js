@@ -8,38 +8,37 @@ import { NavLink } from 'react-router-dom';
 
 const Planning = () => {
   const [loading, setLoading] = useState(true);
-  const [items, setItems] = useState(null);
+  const [records, setRecords] = useState(null);
   const bill = useSelector((state) => state.infoReducer.info.bill);
 
   useEffect(() => {
     async function loadData() {
       const categories = await categoryAPI.getCategories();
+      const records = await recordAPI.getRecords();
 
-      await recordAPI.getRecords().then((items) => {
-        const transformedData = categories.map((category) => {
-          const spend = items
-            .filter((item) => item.categoryId === category.id)
-            .filter((item) => item.type === 'outcome')
-            .reduce((total, item) => {
-              return (total += +item.amount);
-            }, 0);
+      const transformedData = categories.map((category) => {
+        const spend = records
+          .filter((item) => item.categoryId === category.id)
+          .filter((item) => item.type === 'outcome')
+          .reduce((total, item) => {
+            return (total += +item.amount);
+          }, 0);
 
-          const percent = (100 * spend) / category.limit;
-          const progressPercent = percent > 100 ? 100 : percent;
-          const progressColor =
-            percent < 60 ? 'green' : percent < 100 ? 'yellow' : 'red';
+        const percent = (100 * spend) / category.limit;
+        const progressPercent = percent > 100 ? 100 : percent;
+        const progressColor =
+          percent < 60 ? 'green' : percent < 100 ? 'yellow' : 'red';
 
-          return {
-            ...category,
-            progressPercent,
-            progressColor,
-            spend,
-          };
-        });
-
-        setItems(transformedData);
-        setLoading(false);
+        return {
+          ...category,
+          progressPercent,
+          progressColor,
+          spend,
+        };
       });
+
+      setRecords(transformedData);
+      setLoading(false);
     }
 
     loadData();
@@ -56,16 +55,16 @@ const Planning = () => {
         <h4 className='bill'>{bill}</h4>
       </div>
 
-      {!items.length && (
+      {!records.length && (
         <p className='center'>
           Записей пока нет,
           <NavLink to={'/record'}>создать запись</NavLink>
         </p>
       )}
 
-      {items.length > 0 && (
+      {records.length > 0 && (
         <section>
-          {items.map((item) => {
+          {records.map((item) => {
             return (
               <div key={item.id}>
                 <p>
