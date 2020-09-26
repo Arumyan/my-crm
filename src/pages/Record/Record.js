@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './Record.scss';
-import M from 'materialize-css';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { getCategoriesThunk } from '../../redux/reducers/categoriesReducer';
+import M from 'materialize-css';
 import Loader from '../../components/Loader/Loader';
+import { useDispatch, useSelector } from 'react-redux';
 import { recordAPI } from '../../api/recordAPI';
-import { infoAPI } from '../../api/infoAPI';
-import { setInfoActionCreator } from '../../redux/reducers/infoReducer';
+import { updateInfoThunk } from '../../redux/reducers/infoReducer';
+import { getCategoriesThunk } from '../../redux/reducers/categoriesReducer';
 import { NavLink } from 'react-router-dom';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 const Record = () => {
   const selectEl = useRef(null);
@@ -17,10 +18,6 @@ const Record = () => {
     (state) => state.categoriesReducer
   );
   const bill = useSelector((state) => state.infoReducer.info.bill);
-
-  const [type, setType] = useState('income');
-  const [amount, setAmount] = useState(1);
-  const [descr, setDescr] = useState('');
 
   useEffect(() => {
     M.updateTextFields();
@@ -34,117 +31,127 @@ const Record = () => {
     M.FormSelect.init(selectEl.current);
   }, [categories]);
 
-  const canCreateItem = () => {
-    if (type === 'income') {
-      return true;
-    }
-
-    return bill >= amount;
+  const initialValues = {
+    type: 'income',
+    amount: '',
+    description: '',
   };
 
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
+  const onSubmit = (values, onSumbitProps) => {
+    const recordData = {
+      categoryId: selectEl.current.value,
+      amount: values.amount,
+      description: values.description,
+      type: values.type,
+      date: new Date().toLocaleString(),
+    };
 
-    if (canCreateItem()) {
-      console.log('достаточно средств');
+    recordAPI.createRecord(recordData);
 
-      const itemData = {
-        categoryId: selectEl.current.value,
-        amount: amount,
-        descr: descr,
-        type: type,
-        date: new Date().toLocaleString(),
-      };
+    const updatedBill =
+      values.type === 'income'
+        ? Number(bill) + Number(values.amount)
+        : Number(bill) - Number(values.amount);
 
-      recordAPI.createRecord(itemData);
+    dispatch(updateInfoThunk(updatedBill));
+    onSumbitProps.resetForm();
+  };
 
-      const updatedBill =
-        type === 'income'
-          ? Number(bill) + Number(amount)
-          : Number(bill) - Number(amount);
-      infoAPI
-        .updateInfo(updatedBill)
-        .then(() => {
-          return infoAPI.fetchInfo();
-        })
-        .then((data) => {
-          dispatch(setInfoActionCreator(data));
-        });
+  const validationSchema = Yup.object({
+    amount: Yup.number()
+      .typeError('Значение должно быть числом')
+      .min(1, 'Значение не может быть меньше 1')
+      .required('Введите сумму'),
+    description: Yup.string().required('Введите описание'),
+  });
 
-      setAmount(1);
-      setDescr('');
-    } else {
-      console.log('средств не достаточно');
+  const additionalValidate = (values) => {
+    let error = {};
+
+    if (values.type === 'outcome' && values.amount > bill) {
+      error.amount = 'не достаточно средств';
     }
+
+    return error;
   };
 
   const formContent = (
-    <form className='form form-new-item' onSubmit={onSubmitHandler}>
-      <div className='input-field input-field-spaced'>
-        <select ref={selectEl}>
-          {categories.map((category) => {
-            return (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            );
-          })}
-        </select>
-        <label>Выберите категорию</label>
-      </div>
+    <Formik
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      validationSchema={validationSchema}
+      validate={additionalValidate}
+    >
+      {(formik) => (
+        <Form className='form form-new-item'>
+          <div className='input-field input-field-spaced'>
+            <select ref={selectEl}>
+              {categories.map((category) => {
+                return (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                );
+              })}
+            </select>
+            <label>Выберите категорию</label>
+          </div>
 
-      <div className='input-field-spaced'>
-        <label>
-          <input
-            className='with-gap'
-            name='type'
-            type='radio'
-            value='income'
-            checked
-            onChange={(e) => setType(e.target.value)}
-          />
-          <span>Доход</span>
-        </label>
-      </div>
+          <div className='input-field-spaced'>
+            <label>
+              <Field
+                className='with-gap'
+                name='type'
+                type='radio'
+                value='income'
+              />
+              <span>Доход</span>
+            </label>
+          </div>
 
-      <div className='input-field-spaced'>
-        <label>
-          <input
-            className='with-gap'
-            name='type'
-            type='radio'
-            value='outcome'
-            onChange={(e) => setType(e.target.value)}
-          />
-          <span>Расход</span>
-        </label>
-      </div>
+          <div className='input-field-spaced'>
+            <label>
+              <Field
+                className='with-gap'
+                name='type'
+                type='radio'
+                value='outcome'
+              />
+              <span>Расход</span>
+            </label>
+          </div>
 
-      <div className='input-field'>
-        <input
-          id='amount'
-          type='number'
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
-        <label htmlFor='amount'>Сумма</label>
-      </div>
+          <div className='input-field'>
+            <Field id='amount' name='amount' type='number' />
+            <label htmlFor='amount'>Сумма</label>
+            <ErrorMessage
+              name='amount'
+              component='span'
+              className='helper-text red-text text-darken-1'
+            />
+          </div>
 
-      <div className='input-field'>
-        <input
-          id='description'
-          type='text'
-          value={descr}
-          onChange={(e) => setDescr(e.target.value)}
-        />
-        <label htmlFor='description'>Описание</label>
-      </div>
+          <div className='input-field'>
+            <Field id='description' type='text' name='description' />
+            <label htmlFor='description'>Описание</label>
+            <ErrorMessage
+              name='description'
+              component='span'
+              className='helper-text red-text text-darken-1'
+            />
+          </div>
 
-      <button className='btn waves-effect waves-light' type='submit'>
-        Создать
-        <i className='material-icons right'>send</i>
-      </button>
-    </form>
+          <button
+            className='btn waves-effect waves-light'
+            type='submit'
+            disabled={!(formik.dirty & formik.isValid)}
+          >
+            Создать
+            <i className='material-icons right'>send</i>
+          </button>
+        </Form>
+      )}
+    </Formik>
   );
 
   if (isLoading) {

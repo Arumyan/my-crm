@@ -3,6 +3,7 @@ import { authAPI } from './authAPI';
 
 export const recordAPI = {
   async createRecord(record) {
+    console.log(record)
     const uid = authAPI.getUserID();
     return await firebase.database().ref(`/users/${uid}/records`).push(record)
   },
