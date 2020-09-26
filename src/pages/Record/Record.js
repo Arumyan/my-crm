@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import './Record.scss';
-import M from 'materialize-css';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { getCategoriesThunk } from '../../redux/reducers/categoriesReducer';
+import M from 'materialize-css';
 import Loader from '../../components/Loader/Loader';
+import { useDispatch, useSelector } from 'react-redux';
 import { recordAPI } from '../../api/recordAPI';
 import { updateInfoThunk } from '../../redux/reducers/infoReducer';
+import { getCategoriesThunk } from '../../redux/reducers/categoriesReducer';
 import { NavLink } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
